@@ -1,0 +1,2251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+<title>torspec - Tor's protocol specifications</title>
+<meta name='generator' content='cgit v0.10.2'/>
+<meta name='robots' content='index, nofollow'/>
+<link rel='stylesheet' type='text/css' href='/cgit-css/cgit.css'/>
+<link rel='shortcut icon' href='/favicon.ico'/>
+<link rel='alternate' title='Atom feed' href='https://gitweb.torproject.org/torspec.git/atom/rend-spec.txt?h=master' type='application/atom+xml'/>
+</head>
+<body>
+<div id='cgit'><table id='header'>
+<tr>
+<td class='logo' rowspan='2'><a href='/'><img src='/static/logo.jpg' alt='cgit logo'/></a></td>
+<td class='main'><a href='/'>index</a> : <a title='torspec' href='/torspec.git/'>torspec</a></td><td class='form'><form method='get' action=''>
+<select name='h' onchange='this.form.submit();'>
+<option value='master' selected='selected'>master</option>
+</select> <input type='submit' name='' value='switch'/></form></td></tr>
+<tr><td class='sub'>Tor's protocol specifications</td><td class='sub right'>The Tor Project</td></tr></table>
+<table class='tabs'><tr><td>
+<a href='/torspec.git/'>summary</a><a href='/torspec.git/refs/'>refs</a><a href='/torspec.git/log/rend-spec.txt'>log</a><a class='active' href='/torspec.git/tree/rend-spec.txt'>tree</a><a href='/torspec.git/commit/rend-spec.txt'>commit</a><a href='/torspec.git/diff/rend-spec.txt'>diff</a></td><td class='form'><form class='right' method='get' action='/torspec.git/log/rend-spec.txt'>
+<select name='qt'>
+<option value='grep'>log msg</option>
+<option value='author'>author</option>
+<option value='committer'>committer</option>
+<option value='range'>range</option>
+</select>
+<input class='txt' type='text' size='10' name='q' value=''/>
+<input type='submit' value='search'/>
+</form>
+</td></tr></table>
+<div class='path'>path: <a href='/torspec.git/tree/'>root</a>/<a href='/torspec.git/tree/rend-spec.txt'>rend-spec.txt</a></div><div class='content'>blob: d4dfefe8572e34680fa564a1a30e000324458850 (<a href='/torspec.git/plain/rend-spec.txt'>plain</a>)
+<table summary='blob content' class='blob'>
+<tr><td class='linenumbers'><pre><a id='n1' href='#n1'>1</a>
+<a id='n2' href='#n2'>2</a>
+<a id='n3' href='#n3'>3</a>
+<a id='n4' href='#n4'>4</a>
+<a id='n5' href='#n5'>5</a>
+<a id='n6' href='#n6'>6</a>
+<a id='n7' href='#n7'>7</a>
+<a id='n8' href='#n8'>8</a>
+<a id='n9' href='#n9'>9</a>
+<a id='n10' href='#n10'>10</a>
+<a id='n11' href='#n11'>11</a>
+<a id='n12' href='#n12'>12</a>
+<a id='n13' href='#n13'>13</a>
+<a id='n14' href='#n14'>14</a>
+<a id='n15' href='#n15'>15</a>
+<a id='n16' href='#n16'>16</a>
+<a id='n17' href='#n17'>17</a>
+<a id='n18' href='#n18'>18</a>
+<a id='n19' href='#n19'>19</a>
+<a id='n20' href='#n20'>20</a>
+<a id='n21' href='#n21'>21</a>
+<a id='n22' href='#n22'>22</a>
+<a id='n23' href='#n23'>23</a>
+<a id='n24' href='#n24'>24</a>
+<a id='n25' href='#n25'>25</a>
+<a id='n26' href='#n26'>26</a>
+<a id='n27' href='#n27'>27</a>
+<a id='n28' href='#n28'>28</a>
+<a id='n29' href='#n29'>29</a>
+<a id='n30' href='#n30'>30</a>
+<a id='n31' href='#n31'>31</a>
+<a id='n32' href='#n32'>32</a>
+<a id='n33' href='#n33'>33</a>
+<a id='n34' href='#n34'>34</a>
+<a id='n35' href='#n35'>35</a>
+<a id='n36' href='#n36'>36</a>
+<a id='n37' href='#n37'>37</a>
+<a id='n38' href='#n38'>38</a>
+<a id='n39' href='#n39'>39</a>
+<a id='n40' href='#n40'>40</a>
+<a id='n41' href='#n41'>41</a>
+<a id='n42' href='#n42'>42</a>
+<a id='n43' href='#n43'>43</a>
+<a id='n44' href='#n44'>44</a>
+<a id='n45' href='#n45'>45</a>
+<a id='n46' href='#n46'>46</a>
+<a id='n47' href='#n47'>47</a>
+<a id='n48' href='#n48'>48</a>
+<a id='n49' href='#n49'>49</a>
+<a id='n50' href='#n50'>50</a>
+<a id='n51' href='#n51'>51</a>
+<a id='n52' href='#n52'>52</a>
+<a id='n53' href='#n53'>53</a>
+<a id='n54' href='#n54'>54</a>
+<a id='n55' href='#n55'>55</a>
+<a id='n56' href='#n56'>56</a>
+<a id='n57' href='#n57'>57</a>
+<a id='n58' href='#n58'>58</a>
+<a id='n59' href='#n59'>59</a>
+<a id='n60' href='#n60'>60</a>
+<a id='n61' href='#n61'>61</a>
+<a id='n62' href='#n62'>62</a>
+<a id='n63' href='#n63'>63</a>
+<a id='n64' href='#n64'>64</a>
+<a id='n65' href='#n65'>65</a>
+<a id='n66' href='#n66'>66</a>
+<a id='n67' href='#n67'>67</a>
+<a id='n68' href='#n68'>68</a>
+<a id='n69' href='#n69'>69</a>
+<a id='n70' href='#n70'>70</a>
+<a id='n71' href='#n71'>71</a>
+<a id='n72' href='#n72'>72</a>
+<a id='n73' href='#n73'>73</a>
+<a id='n74' href='#n74'>74</a>
+<a id='n75' href='#n75'>75</a>
+<a id='n76' href='#n76'>76</a>
+<a id='n77' href='#n77'>77</a>
+<a id='n78' href='#n78'>78</a>
+<a id='n79' href='#n79'>79</a>
+<a id='n80' href='#n80'>80</a>
+<a id='n81' href='#n81'>81</a>
+<a id='n82' href='#n82'>82</a>
+<a id='n83' href='#n83'>83</a>
+<a id='n84' href='#n84'>84</a>
+<a id='n85' href='#n85'>85</a>
+<a id='n86' href='#n86'>86</a>
+<a id='n87' href='#n87'>87</a>
+<a id='n88' href='#n88'>88</a>
+<a id='n89' href='#n89'>89</a>
+<a id='n90' href='#n90'>90</a>
+<a id='n91' href='#n91'>91</a>
+<a id='n92' href='#n92'>92</a>
+<a id='n93' href='#n93'>93</a>
+<a id='n94' href='#n94'>94</a>
+<a id='n95' href='#n95'>95</a>
+<a id='n96' href='#n96'>96</a>
+<a id='n97' href='#n97'>97</a>
+<a id='n98' href='#n98'>98</a>
+<a id='n99' href='#n99'>99</a>
+<a id='n100' href='#n100'>100</a>
+<a id='n101' href='#n101'>101</a>
+<a id='n102' href='#n102'>102</a>
+<a id='n103' href='#n103'>103</a>
+<a id='n104' href='#n104'>104</a>
+<a id='n105' href='#n105'>105</a>
+<a id='n106' href='#n106'>106</a>
+<a id='n107' href='#n107'>107</a>
+<a id='n108' href='#n108'>108</a>
+<a id='n109' href='#n109'>109</a>
+<a id='n110' href='#n110'>110</a>
+<a id='n111' href='#n111'>111</a>
+<a id='n112' href='#n112'>112</a>
+<a id='n113' href='#n113'>113</a>
+<a id='n114' href='#n114'>114</a>
+<a id='n115' href='#n115'>115</a>
+<a id='n116' href='#n116'>116</a>
+<a id='n117' href='#n117'>117</a>
+<a id='n118' href='#n118'>118</a>
+<a id='n119' href='#n119'>119</a>
+<a id='n120' href='#n120'>120</a>
+<a id='n121' href='#n121'>121</a>
+<a id='n122' href='#n122'>122</a>
+<a id='n123' href='#n123'>123</a>
+<a id='n124' href='#n124'>124</a>
+<a id='n125' href='#n125'>125</a>
+<a id='n126' href='#n126'>126</a>
+<a id='n127' href='#n127'>127</a>
+<a id='n128' href='#n128'>128</a>
+<a id='n129' href='#n129'>129</a>
+<a id='n130' href='#n130'>130</a>
+<a id='n131' href='#n131'>131</a>
+<a id='n132' href='#n132'>132</a>
+<a id='n133' href='#n133'>133</a>
+<a id='n134' href='#n134'>134</a>
+<a id='n135' href='#n135'>135</a>
+<a id='n136' href='#n136'>136</a>
+<a id='n137' href='#n137'>137</a>
+<a id='n138' href='#n138'>138</a>
+<a id='n139' href='#n139'>139</a>
+<a id='n140' href='#n140'>140</a>
+<a id='n141' href='#n141'>141</a>
+<a id='n142' href='#n142'>142</a>
+<a id='n143' href='#n143'>143</a>
+<a id='n144' href='#n144'>144</a>
+<a id='n145' href='#n145'>145</a>
+<a id='n146' href='#n146'>146</a>
+<a id='n147' href='#n147'>147</a>
+<a id='n148' href='#n148'>148</a>
+<a id='n149' href='#n149'>149</a>
+<a id='n150' href='#n150'>150</a>
+<a id='n151' href='#n151'>151</a>
+<a id='n152' href='#n152'>152</a>
+<a id='n153' href='#n153'>153</a>
+<a id='n154' href='#n154'>154</a>
+<a id='n155' href='#n155'>155</a>
+<a id='n156' href='#n156'>156</a>
+<a id='n157' href='#n157'>157</a>
+<a id='n158' href='#n158'>158</a>
+<a id='n159' href='#n159'>159</a>
+<a id='n160' href='#n160'>160</a>
+<a id='n161' href='#n161'>161</a>
+<a id='n162' href='#n162'>162</a>
+<a id='n163' href='#n163'>163</a>
+<a id='n164' href='#n164'>164</a>
+<a id='n165' href='#n165'>165</a>
+<a id='n166' href='#n166'>166</a>
+<a id='n167' href='#n167'>167</a>
+<a id='n168' href='#n168'>168</a>
+<a id='n169' href='#n169'>169</a>
+<a id='n170' href='#n170'>170</a>
+<a id='n171' href='#n171'>171</a>
+<a id='n172' href='#n172'>172</a>
+<a id='n173' href='#n173'>173</a>
+<a id='n174' href='#n174'>174</a>
+<a id='n175' href='#n175'>175</a>
+<a id='n176' href='#n176'>176</a>
+<a id='n177' href='#n177'>177</a>
+<a id='n178' href='#n178'>178</a>
+<a id='n179' href='#n179'>179</a>
+<a id='n180' href='#n180'>180</a>
+<a id='n181' href='#n181'>181</a>
+<a id='n182' href='#n182'>182</a>
+<a id='n183' href='#n183'>183</a>
+<a id='n184' href='#n184'>184</a>
+<a id='n185' href='#n185'>185</a>
+<a id='n186' href='#n186'>186</a>
+<a id='n187' href='#n187'>187</a>
+<a id='n188' href='#n188'>188</a>
+<a id='n189' href='#n189'>189</a>
+<a id='n190' href='#n190'>190</a>
+<a id='n191' href='#n191'>191</a>
+<a id='n192' href='#n192'>192</a>
+<a id='n193' href='#n193'>193</a>
+<a id='n194' href='#n194'>194</a>
+<a id='n195' href='#n195'>195</a>
+<a id='n196' href='#n196'>196</a>
+<a id='n197' href='#n197'>197</a>
+<a id='n198' href='#n198'>198</a>
+<a id='n199' href='#n199'>199</a>
+<a id='n200' href='#n200'>200</a>
+<a id='n201' href='#n201'>201</a>
+<a id='n202' href='#n202'>202</a>
+<a id='n203' href='#n203'>203</a>
+<a id='n204' href='#n204'>204</a>
+<a id='n205' href='#n205'>205</a>
+<a id='n206' href='#n206'>206</a>
+<a id='n207' href='#n207'>207</a>
+<a id='n208' href='#n208'>208</a>
+<a id='n209' href='#n209'>209</a>
+<a id='n210' href='#n210'>210</a>
+<a id='n211' href='#n211'>211</a>
+<a id='n212' href='#n212'>212</a>
+<a id='n213' href='#n213'>213</a>
+<a id='n214' href='#n214'>214</a>
+<a id='n215' href='#n215'>215</a>
+<a id='n216' href='#n216'>216</a>
+<a id='n217' href='#n217'>217</a>
+<a id='n218' href='#n218'>218</a>
+<a id='n219' href='#n219'>219</a>
+<a id='n220' href='#n220'>220</a>
+<a id='n221' href='#n221'>221</a>
+<a id='n222' href='#n222'>222</a>
+<a id='n223' href='#n223'>223</a>
+<a id='n224' href='#n224'>224</a>
+<a id='n225' href='#n225'>225</a>
+<a id='n226' href='#n226'>226</a>
+<a id='n227' href='#n227'>227</a>
+<a id='n228' href='#n228'>228</a>
+<a id='n229' href='#n229'>229</a>
+<a id='n230' href='#n230'>230</a>
+<a id='n231' href='#n231'>231</a>
+<a id='n232' href='#n232'>232</a>
+<a id='n233' href='#n233'>233</a>
+<a id='n234' href='#n234'>234</a>
+<a id='n235' href='#n235'>235</a>
+<a id='n236' href='#n236'>236</a>
+<a id='n237' href='#n237'>237</a>
+<a id='n238' href='#n238'>238</a>
+<a id='n239' href='#n239'>239</a>
+<a id='n240' href='#n240'>240</a>
+<a id='n241' href='#n241'>241</a>
+<a id='n242' href='#n242'>242</a>
+<a id='n243' href='#n243'>243</a>
+<a id='n244' href='#n244'>244</a>
+<a id='n245' href='#n245'>245</a>
+<a id='n246' href='#n246'>246</a>
+<a id='n247' href='#n247'>247</a>
+<a id='n248' href='#n248'>248</a>
+<a id='n249' href='#n249'>249</a>
+<a id='n250' href='#n250'>250</a>
+<a id='n251' href='#n251'>251</a>
+<a id='n252' href='#n252'>252</a>
+<a id='n253' href='#n253'>253</a>
+<a id='n254' href='#n254'>254</a>
+<a id='n255' href='#n255'>255</a>
+<a id='n256' href='#n256'>256</a>
+<a id='n257' href='#n257'>257</a>
+<a id='n258' href='#n258'>258</a>
+<a id='n259' href='#n259'>259</a>
+<a id='n260' href='#n260'>260</a>
+<a id='n261' href='#n261'>261</a>
+<a id='n262' href='#n262'>262</a>
+<a id='n263' href='#n263'>263</a>
+<a id='n264' href='#n264'>264</a>
+<a id='n265' href='#n265'>265</a>
+<a id='n266' href='#n266'>266</a>
+<a id='n267' href='#n267'>267</a>
+<a id='n268' href='#n268'>268</a>
+<a id='n269' href='#n269'>269</a>
+<a id='n270' href='#n270'>270</a>
+<a id='n271' href='#n271'>271</a>
+<a id='n272' href='#n272'>272</a>
+<a id='n273' href='#n273'>273</a>
+<a id='n274' href='#n274'>274</a>
+<a id='n275' href='#n275'>275</a>
+<a id='n276' href='#n276'>276</a>
+<a id='n277' href='#n277'>277</a>
+<a id='n278' href='#n278'>278</a>
+<a id='n279' href='#n279'>279</a>
+<a id='n280' href='#n280'>280</a>
+<a id='n281' href='#n281'>281</a>
+<a id='n282' href='#n282'>282</a>
+<a id='n283' href='#n283'>283</a>
+<a id='n284' href='#n284'>284</a>
+<a id='n285' href='#n285'>285</a>
+<a id='n286' href='#n286'>286</a>
+<a id='n287' href='#n287'>287</a>
+<a id='n288' href='#n288'>288</a>
+<a id='n289' href='#n289'>289</a>
+<a id='n290' href='#n290'>290</a>
+<a id='n291' href='#n291'>291</a>
+<a id='n292' href='#n292'>292</a>
+<a id='n293' href='#n293'>293</a>
+<a id='n294' href='#n294'>294</a>
+<a id='n295' href='#n295'>295</a>
+<a id='n296' href='#n296'>296</a>
+<a id='n297' href='#n297'>297</a>
+<a id='n298' href='#n298'>298</a>
+<a id='n299' href='#n299'>299</a>
+<a id='n300' href='#n300'>300</a>
+<a id='n301' href='#n301'>301</a>
+<a id='n302' href='#n302'>302</a>
+<a id='n303' href='#n303'>303</a>
+<a id='n304' href='#n304'>304</a>
+<a id='n305' href='#n305'>305</a>
+<a id='n306' href='#n306'>306</a>
+<a id='n307' href='#n307'>307</a>
+<a id='n308' href='#n308'>308</a>
+<a id='n309' href='#n309'>309</a>
+<a id='n310' href='#n310'>310</a>
+<a id='n311' href='#n311'>311</a>
+<a id='n312' href='#n312'>312</a>
+<a id='n313' href='#n313'>313</a>
+<a id='n314' href='#n314'>314</a>
+<a id='n315' href='#n315'>315</a>
+<a id='n316' href='#n316'>316</a>
+<a id='n317' href='#n317'>317</a>
+<a id='n318' href='#n318'>318</a>
+<a id='n319' href='#n319'>319</a>
+<a id='n320' href='#n320'>320</a>
+<a id='n321' href='#n321'>321</a>
+<a id='n322' href='#n322'>322</a>
+<a id='n323' href='#n323'>323</a>
+<a id='n324' href='#n324'>324</a>
+<a id='n325' href='#n325'>325</a>
+<a id='n326' href='#n326'>326</a>
+<a id='n327' href='#n327'>327</a>
+<a id='n328' href='#n328'>328</a>
+<a id='n329' href='#n329'>329</a>
+<a id='n330' href='#n330'>330</a>
+<a id='n331' href='#n331'>331</a>
+<a id='n332' href='#n332'>332</a>
+<a id='n333' href='#n333'>333</a>
+<a id='n334' href='#n334'>334</a>
+<a id='n335' href='#n335'>335</a>
+<a id='n336' href='#n336'>336</a>
+<a id='n337' href='#n337'>337</a>
+<a id='n338' href='#n338'>338</a>
+<a id='n339' href='#n339'>339</a>
+<a id='n340' href='#n340'>340</a>
+<a id='n341' href='#n341'>341</a>
+<a id='n342' href='#n342'>342</a>
+<a id='n343' href='#n343'>343</a>
+<a id='n344' href='#n344'>344</a>
+<a id='n345' href='#n345'>345</a>
+<a id='n346' href='#n346'>346</a>
+<a id='n347' href='#n347'>347</a>
+<a id='n348' href='#n348'>348</a>
+<a id='n349' href='#n349'>349</a>
+<a id='n350' href='#n350'>350</a>
+<a id='n351' href='#n351'>351</a>
+<a id='n352' href='#n352'>352</a>
+<a id='n353' href='#n353'>353</a>
+<a id='n354' href='#n354'>354</a>
+<a id='n355' href='#n355'>355</a>
+<a id='n356' href='#n356'>356</a>
+<a id='n357' href='#n357'>357</a>
+<a id='n358' href='#n358'>358</a>
+<a id='n359' href='#n359'>359</a>
+<a id='n360' href='#n360'>360</a>
+<a id='n361' href='#n361'>361</a>
+<a id='n362' href='#n362'>362</a>
+<a id='n363' href='#n363'>363</a>
+<a id='n364' href='#n364'>364</a>
+<a id='n365' href='#n365'>365</a>
+<a id='n366' href='#n366'>366</a>
+<a id='n367' href='#n367'>367</a>
+<a id='n368' href='#n368'>368</a>
+<a id='n369' href='#n369'>369</a>
+<a id='n370' href='#n370'>370</a>
+<a id='n371' href='#n371'>371</a>
+<a id='n372' href='#n372'>372</a>
+<a id='n373' href='#n373'>373</a>
+<a id='n374' href='#n374'>374</a>
+<a id='n375' href='#n375'>375</a>
+<a id='n376' href='#n376'>376</a>
+<a id='n377' href='#n377'>377</a>
+<a id='n378' href='#n378'>378</a>
+<a id='n379' href='#n379'>379</a>
+<a id='n380' href='#n380'>380</a>
+<a id='n381' href='#n381'>381</a>
+<a id='n382' href='#n382'>382</a>
+<a id='n383' href='#n383'>383</a>
+<a id='n384' href='#n384'>384</a>
+<a id='n385' href='#n385'>385</a>
+<a id='n386' href='#n386'>386</a>
+<a id='n387' href='#n387'>387</a>
+<a id='n388' href='#n388'>388</a>
+<a id='n389' href='#n389'>389</a>
+<a id='n390' href='#n390'>390</a>
+<a id='n391' href='#n391'>391</a>
+<a id='n392' href='#n392'>392</a>
+<a id='n393' href='#n393'>393</a>
+<a id='n394' href='#n394'>394</a>
+<a id='n395' href='#n395'>395</a>
+<a id='n396' href='#n396'>396</a>
+<a id='n397' href='#n397'>397</a>
+<a id='n398' href='#n398'>398</a>
+<a id='n399' href='#n399'>399</a>
+<a id='n400' href='#n400'>400</a>
+<a id='n401' href='#n401'>401</a>
+<a id='n402' href='#n402'>402</a>
+<a id='n403' href='#n403'>403</a>
+<a id='n404' href='#n404'>404</a>
+<a id='n405' href='#n405'>405</a>
+<a id='n406' href='#n406'>406</a>
+<a id='n407' href='#n407'>407</a>
+<a id='n408' href='#n408'>408</a>
+<a id='n409' href='#n409'>409</a>
+<a id='n410' href='#n410'>410</a>
+<a id='n411' href='#n411'>411</a>
+<a id='n412' href='#n412'>412</a>
+<a id='n413' href='#n413'>413</a>
+<a id='n414' href='#n414'>414</a>
+<a id='n415' href='#n415'>415</a>
+<a id='n416' href='#n416'>416</a>
+<a id='n417' href='#n417'>417</a>
+<a id='n418' href='#n418'>418</a>
+<a id='n419' href='#n419'>419</a>
+<a id='n420' href='#n420'>420</a>
+<a id='n421' href='#n421'>421</a>
+<a id='n422' href='#n422'>422</a>
+<a id='n423' href='#n423'>423</a>
+<a id='n424' href='#n424'>424</a>
+<a id='n425' href='#n425'>425</a>
+<a id='n426' href='#n426'>426</a>
+<a id='n427' href='#n427'>427</a>
+<a id='n428' href='#n428'>428</a>
+<a id='n429' href='#n429'>429</a>
+<a id='n430' href='#n430'>430</a>
+<a id='n431' href='#n431'>431</a>
+<a id='n432' href='#n432'>432</a>
+<a id='n433' href='#n433'>433</a>
+<a id='n434' href='#n434'>434</a>
+<a id='n435' href='#n435'>435</a>
+<a id='n436' href='#n436'>436</a>
+<a id='n437' href='#n437'>437</a>
+<a id='n438' href='#n438'>438</a>
+<a id='n439' href='#n439'>439</a>
+<a id='n440' href='#n440'>440</a>
+<a id='n441' href='#n441'>441</a>
+<a id='n442' href='#n442'>442</a>
+<a id='n443' href='#n443'>443</a>
+<a id='n444' href='#n444'>444</a>
+<a id='n445' href='#n445'>445</a>
+<a id='n446' href='#n446'>446</a>
+<a id='n447' href='#n447'>447</a>
+<a id='n448' href='#n448'>448</a>
+<a id='n449' href='#n449'>449</a>
+<a id='n450' href='#n450'>450</a>
+<a id='n451' href='#n451'>451</a>
+<a id='n452' href='#n452'>452</a>
+<a id='n453' href='#n453'>453</a>
+<a id='n454' href='#n454'>454</a>
+<a id='n455' href='#n455'>455</a>
+<a id='n456' href='#n456'>456</a>
+<a id='n457' href='#n457'>457</a>
+<a id='n458' href='#n458'>458</a>
+<a id='n459' href='#n459'>459</a>
+<a id='n460' href='#n460'>460</a>
+<a id='n461' href='#n461'>461</a>
+<a id='n462' href='#n462'>462</a>
+<a id='n463' href='#n463'>463</a>
+<a id='n464' href='#n464'>464</a>
+<a id='n465' href='#n465'>465</a>
+<a id='n466' href='#n466'>466</a>
+<a id='n467' href='#n467'>467</a>
+<a id='n468' href='#n468'>468</a>
+<a id='n469' href='#n469'>469</a>
+<a id='n470' href='#n470'>470</a>
+<a id='n471' href='#n471'>471</a>
+<a id='n472' href='#n472'>472</a>
+<a id='n473' href='#n473'>473</a>
+<a id='n474' href='#n474'>474</a>
+<a id='n475' href='#n475'>475</a>
+<a id='n476' href='#n476'>476</a>
+<a id='n477' href='#n477'>477</a>
+<a id='n478' href='#n478'>478</a>
+<a id='n479' href='#n479'>479</a>
+<a id='n480' href='#n480'>480</a>
+<a id='n481' href='#n481'>481</a>
+<a id='n482' href='#n482'>482</a>
+<a id='n483' href='#n483'>483</a>
+<a id='n484' href='#n484'>484</a>
+<a id='n485' href='#n485'>485</a>
+<a id='n486' href='#n486'>486</a>
+<a id='n487' href='#n487'>487</a>
+<a id='n488' href='#n488'>488</a>
+<a id='n489' href='#n489'>489</a>
+<a id='n490' href='#n490'>490</a>
+<a id='n491' href='#n491'>491</a>
+<a id='n492' href='#n492'>492</a>
+<a id='n493' href='#n493'>493</a>
+<a id='n494' href='#n494'>494</a>
+<a id='n495' href='#n495'>495</a>
+<a id='n496' href='#n496'>496</a>
+<a id='n497' href='#n497'>497</a>
+<a id='n498' href='#n498'>498</a>
+<a id='n499' href='#n499'>499</a>
+<a id='n500' href='#n500'>500</a>
+<a id='n501' href='#n501'>501</a>
+<a id='n502' href='#n502'>502</a>
+<a id='n503' href='#n503'>503</a>
+<a id='n504' href='#n504'>504</a>
+<a id='n505' href='#n505'>505</a>
+<a id='n506' href='#n506'>506</a>
+<a id='n507' href='#n507'>507</a>
+<a id='n508' href='#n508'>508</a>
+<a id='n509' href='#n509'>509</a>
+<a id='n510' href='#n510'>510</a>
+<a id='n511' href='#n511'>511</a>
+<a id='n512' href='#n512'>512</a>
+<a id='n513' href='#n513'>513</a>
+<a id='n514' href='#n514'>514</a>
+<a id='n515' href='#n515'>515</a>
+<a id='n516' href='#n516'>516</a>
+<a id='n517' href='#n517'>517</a>
+<a id='n518' href='#n518'>518</a>
+<a id='n519' href='#n519'>519</a>
+<a id='n520' href='#n520'>520</a>
+<a id='n521' href='#n521'>521</a>
+<a id='n522' href='#n522'>522</a>
+<a id='n523' href='#n523'>523</a>
+<a id='n524' href='#n524'>524</a>
+<a id='n525' href='#n525'>525</a>
+<a id='n526' href='#n526'>526</a>
+<a id='n527' href='#n527'>527</a>
+<a id='n528' href='#n528'>528</a>
+<a id='n529' href='#n529'>529</a>
+<a id='n530' href='#n530'>530</a>
+<a id='n531' href='#n531'>531</a>
+<a id='n532' href='#n532'>532</a>
+<a id='n533' href='#n533'>533</a>
+<a id='n534' href='#n534'>534</a>
+<a id='n535' href='#n535'>535</a>
+<a id='n536' href='#n536'>536</a>
+<a id='n537' href='#n537'>537</a>
+<a id='n538' href='#n538'>538</a>
+<a id='n539' href='#n539'>539</a>
+<a id='n540' href='#n540'>540</a>
+<a id='n541' href='#n541'>541</a>
+<a id='n542' href='#n542'>542</a>
+<a id='n543' href='#n543'>543</a>
+<a id='n544' href='#n544'>544</a>
+<a id='n545' href='#n545'>545</a>
+<a id='n546' href='#n546'>546</a>
+<a id='n547' href='#n547'>547</a>
+<a id='n548' href='#n548'>548</a>
+<a id='n549' href='#n549'>549</a>
+<a id='n550' href='#n550'>550</a>
+<a id='n551' href='#n551'>551</a>
+<a id='n552' href='#n552'>552</a>
+<a id='n553' href='#n553'>553</a>
+<a id='n554' href='#n554'>554</a>
+<a id='n555' href='#n555'>555</a>
+<a id='n556' href='#n556'>556</a>
+<a id='n557' href='#n557'>557</a>
+<a id='n558' href='#n558'>558</a>
+<a id='n559' href='#n559'>559</a>
+<a id='n560' href='#n560'>560</a>
+<a id='n561' href='#n561'>561</a>
+<a id='n562' href='#n562'>562</a>
+<a id='n563' href='#n563'>563</a>
+<a id='n564' href='#n564'>564</a>
+<a id='n565' href='#n565'>565</a>
+<a id='n566' href='#n566'>566</a>
+<a id='n567' href='#n567'>567</a>
+<a id='n568' href='#n568'>568</a>
+<a id='n569' href='#n569'>569</a>
+<a id='n570' href='#n570'>570</a>
+<a id='n571' href='#n571'>571</a>
+<a id='n572' href='#n572'>572</a>
+<a id='n573' href='#n573'>573</a>
+<a id='n574' href='#n574'>574</a>
+<a id='n575' href='#n575'>575</a>
+<a id='n576' href='#n576'>576</a>
+<a id='n577' href='#n577'>577</a>
+<a id='n578' href='#n578'>578</a>
+<a id='n579' href='#n579'>579</a>
+<a id='n580' href='#n580'>580</a>
+<a id='n581' href='#n581'>581</a>
+<a id='n582' href='#n582'>582</a>
+<a id='n583' href='#n583'>583</a>
+<a id='n584' href='#n584'>584</a>
+<a id='n585' href='#n585'>585</a>
+<a id='n586' href='#n586'>586</a>
+<a id='n587' href='#n587'>587</a>
+<a id='n588' href='#n588'>588</a>
+<a id='n589' href='#n589'>589</a>
+<a id='n590' href='#n590'>590</a>
+<a id='n591' href='#n591'>591</a>
+<a id='n592' href='#n592'>592</a>
+<a id='n593' href='#n593'>593</a>
+<a id='n594' href='#n594'>594</a>
+<a id='n595' href='#n595'>595</a>
+<a id='n596' href='#n596'>596</a>
+<a id='n597' href='#n597'>597</a>
+<a id='n598' href='#n598'>598</a>
+<a id='n599' href='#n599'>599</a>
+<a id='n600' href='#n600'>600</a>
+<a id='n601' href='#n601'>601</a>
+<a id='n602' href='#n602'>602</a>
+<a id='n603' href='#n603'>603</a>
+<a id='n604' href='#n604'>604</a>
+<a id='n605' href='#n605'>605</a>
+<a id='n606' href='#n606'>606</a>
+<a id='n607' href='#n607'>607</a>
+<a id='n608' href='#n608'>608</a>
+<a id='n609' href='#n609'>609</a>
+<a id='n610' href='#n610'>610</a>
+<a id='n611' href='#n611'>611</a>
+<a id='n612' href='#n612'>612</a>
+<a id='n613' href='#n613'>613</a>
+<a id='n614' href='#n614'>614</a>
+<a id='n615' href='#n615'>615</a>
+<a id='n616' href='#n616'>616</a>
+<a id='n617' href='#n617'>617</a>
+<a id='n618' href='#n618'>618</a>
+<a id='n619' href='#n619'>619</a>
+<a id='n620' href='#n620'>620</a>
+<a id='n621' href='#n621'>621</a>
+<a id='n622' href='#n622'>622</a>
+<a id='n623' href='#n623'>623</a>
+<a id='n624' href='#n624'>624</a>
+<a id='n625' href='#n625'>625</a>
+<a id='n626' href='#n626'>626</a>
+<a id='n627' href='#n627'>627</a>
+<a id='n628' href='#n628'>628</a>
+<a id='n629' href='#n629'>629</a>
+<a id='n630' href='#n630'>630</a>
+<a id='n631' href='#n631'>631</a>
+<a id='n632' href='#n632'>632</a>
+<a id='n633' href='#n633'>633</a>
+<a id='n634' href='#n634'>634</a>
+<a id='n635' href='#n635'>635</a>
+<a id='n636' href='#n636'>636</a>
+<a id='n637' href='#n637'>637</a>
+<a id='n638' href='#n638'>638</a>
+<a id='n639' href='#n639'>639</a>
+<a id='n640' href='#n640'>640</a>
+<a id='n641' href='#n641'>641</a>
+<a id='n642' href='#n642'>642</a>
+<a id='n643' href='#n643'>643</a>
+<a id='n644' href='#n644'>644</a>
+<a id='n645' href='#n645'>645</a>
+<a id='n646' href='#n646'>646</a>
+<a id='n647' href='#n647'>647</a>
+<a id='n648' href='#n648'>648</a>
+<a id='n649' href='#n649'>649</a>
+<a id='n650' href='#n650'>650</a>
+<a id='n651' href='#n651'>651</a>
+<a id='n652' href='#n652'>652</a>
+<a id='n653' href='#n653'>653</a>
+<a id='n654' href='#n654'>654</a>
+<a id='n655' href='#n655'>655</a>
+<a id='n656' href='#n656'>656</a>
+<a id='n657' href='#n657'>657</a>
+<a id='n658' href='#n658'>658</a>
+<a id='n659' href='#n659'>659</a>
+<a id='n660' href='#n660'>660</a>
+<a id='n661' href='#n661'>661</a>
+<a id='n662' href='#n662'>662</a>
+<a id='n663' href='#n663'>663</a>
+<a id='n664' href='#n664'>664</a>
+<a id='n665' href='#n665'>665</a>
+<a id='n666' href='#n666'>666</a>
+<a id='n667' href='#n667'>667</a>
+<a id='n668' href='#n668'>668</a>
+<a id='n669' href='#n669'>669</a>
+<a id='n670' href='#n670'>670</a>
+<a id='n671' href='#n671'>671</a>
+<a id='n672' href='#n672'>672</a>
+<a id='n673' href='#n673'>673</a>
+<a id='n674' href='#n674'>674</a>
+<a id='n675' href='#n675'>675</a>
+<a id='n676' href='#n676'>676</a>
+<a id='n677' href='#n677'>677</a>
+<a id='n678' href='#n678'>678</a>
+<a id='n679' href='#n679'>679</a>
+<a id='n680' href='#n680'>680</a>
+<a id='n681' href='#n681'>681</a>
+<a id='n682' href='#n682'>682</a>
+<a id='n683' href='#n683'>683</a>
+<a id='n684' href='#n684'>684</a>
+<a id='n685' href='#n685'>685</a>
+<a id='n686' href='#n686'>686</a>
+<a id='n687' href='#n687'>687</a>
+<a id='n688' href='#n688'>688</a>
+<a id='n689' href='#n689'>689</a>
+<a id='n690' href='#n690'>690</a>
+<a id='n691' href='#n691'>691</a>
+<a id='n692' href='#n692'>692</a>
+<a id='n693' href='#n693'>693</a>
+<a id='n694' href='#n694'>694</a>
+<a id='n695' href='#n695'>695</a>
+<a id='n696' href='#n696'>696</a>
+<a id='n697' href='#n697'>697</a>
+<a id='n698' href='#n698'>698</a>
+<a id='n699' href='#n699'>699</a>
+<a id='n700' href='#n700'>700</a>
+<a id='n701' href='#n701'>701</a>
+<a id='n702' href='#n702'>702</a>
+<a id='n703' href='#n703'>703</a>
+<a id='n704' href='#n704'>704</a>
+<a id='n705' href='#n705'>705</a>
+<a id='n706' href='#n706'>706</a>
+<a id='n707' href='#n707'>707</a>
+<a id='n708' href='#n708'>708</a>
+<a id='n709' href='#n709'>709</a>
+<a id='n710' href='#n710'>710</a>
+<a id='n711' href='#n711'>711</a>
+<a id='n712' href='#n712'>712</a>
+<a id='n713' href='#n713'>713</a>
+<a id='n714' href='#n714'>714</a>
+<a id='n715' href='#n715'>715</a>
+<a id='n716' href='#n716'>716</a>
+<a id='n717' href='#n717'>717</a>
+<a id='n718' href='#n718'>718</a>
+<a id='n719' href='#n719'>719</a>
+<a id='n720' href='#n720'>720</a>
+<a id='n721' href='#n721'>721</a>
+<a id='n722' href='#n722'>722</a>
+<a id='n723' href='#n723'>723</a>
+<a id='n724' href='#n724'>724</a>
+<a id='n725' href='#n725'>725</a>
+<a id='n726' href='#n726'>726</a>
+<a id='n727' href='#n727'>727</a>
+<a id='n728' href='#n728'>728</a>
+<a id='n729' href='#n729'>729</a>
+<a id='n730' href='#n730'>730</a>
+<a id='n731' href='#n731'>731</a>
+<a id='n732' href='#n732'>732</a>
+<a id='n733' href='#n733'>733</a>
+<a id='n734' href='#n734'>734</a>
+<a id='n735' href='#n735'>735</a>
+<a id='n736' href='#n736'>736</a>
+<a id='n737' href='#n737'>737</a>
+<a id='n738' href='#n738'>738</a>
+<a id='n739' href='#n739'>739</a>
+<a id='n740' href='#n740'>740</a>
+<a id='n741' href='#n741'>741</a>
+<a id='n742' href='#n742'>742</a>
+<a id='n743' href='#n743'>743</a>
+<a id='n744' href='#n744'>744</a>
+<a id='n745' href='#n745'>745</a>
+<a id='n746' href='#n746'>746</a>
+<a id='n747' href='#n747'>747</a>
+<a id='n748' href='#n748'>748</a>
+<a id='n749' href='#n749'>749</a>
+<a id='n750' href='#n750'>750</a>
+<a id='n751' href='#n751'>751</a>
+<a id='n752' href='#n752'>752</a>
+<a id='n753' href='#n753'>753</a>
+<a id='n754' href='#n754'>754</a>
+<a id='n755' href='#n755'>755</a>
+<a id='n756' href='#n756'>756</a>
+<a id='n757' href='#n757'>757</a>
+<a id='n758' href='#n758'>758</a>
+<a id='n759' href='#n759'>759</a>
+<a id='n760' href='#n760'>760</a>
+<a id='n761' href='#n761'>761</a>
+<a id='n762' href='#n762'>762</a>
+<a id='n763' href='#n763'>763</a>
+<a id='n764' href='#n764'>764</a>
+<a id='n765' href='#n765'>765</a>
+<a id='n766' href='#n766'>766</a>
+<a id='n767' href='#n767'>767</a>
+<a id='n768' href='#n768'>768</a>
+<a id='n769' href='#n769'>769</a>
+<a id='n770' href='#n770'>770</a>
+<a id='n771' href='#n771'>771</a>
+<a id='n772' href='#n772'>772</a>
+<a id='n773' href='#n773'>773</a>
+<a id='n774' href='#n774'>774</a>
+<a id='n775' href='#n775'>775</a>
+<a id='n776' href='#n776'>776</a>
+<a id='n777' href='#n777'>777</a>
+<a id='n778' href='#n778'>778</a>
+<a id='n779' href='#n779'>779</a>
+<a id='n780' href='#n780'>780</a>
+<a id='n781' href='#n781'>781</a>
+<a id='n782' href='#n782'>782</a>
+<a id='n783' href='#n783'>783</a>
+<a id='n784' href='#n784'>784</a>
+<a id='n785' href='#n785'>785</a>
+<a id='n786' href='#n786'>786</a>
+<a id='n787' href='#n787'>787</a>
+<a id='n788' href='#n788'>788</a>
+<a id='n789' href='#n789'>789</a>
+<a id='n790' href='#n790'>790</a>
+<a id='n791' href='#n791'>791</a>
+<a id='n792' href='#n792'>792</a>
+<a id='n793' href='#n793'>793</a>
+<a id='n794' href='#n794'>794</a>
+<a id='n795' href='#n795'>795</a>
+<a id='n796' href='#n796'>796</a>
+<a id='n797' href='#n797'>797</a>
+<a id='n798' href='#n798'>798</a>
+<a id='n799' href='#n799'>799</a>
+<a id='n800' href='#n800'>800</a>
+<a id='n801' href='#n801'>801</a>
+<a id='n802' href='#n802'>802</a>
+<a id='n803' href='#n803'>803</a>
+<a id='n804' href='#n804'>804</a>
+<a id='n805' href='#n805'>805</a>
+<a id='n806' href='#n806'>806</a>
+<a id='n807' href='#n807'>807</a>
+<a id='n808' href='#n808'>808</a>
+<a id='n809' href='#n809'>809</a>
+<a id='n810' href='#n810'>810</a>
+<a id='n811' href='#n811'>811</a>
+<a id='n812' href='#n812'>812</a>
+<a id='n813' href='#n813'>813</a>
+<a id='n814' href='#n814'>814</a>
+<a id='n815' href='#n815'>815</a>
+<a id='n816' href='#n816'>816</a>
+<a id='n817' href='#n817'>817</a>
+<a id='n818' href='#n818'>818</a>
+<a id='n819' href='#n819'>819</a>
+<a id='n820' href='#n820'>820</a>
+<a id='n821' href='#n821'>821</a>
+<a id='n822' href='#n822'>822</a>
+<a id='n823' href='#n823'>823</a>
+<a id='n824' href='#n824'>824</a>
+<a id='n825' href='#n825'>825</a>
+<a id='n826' href='#n826'>826</a>
+<a id='n827' href='#n827'>827</a>
+<a id='n828' href='#n828'>828</a>
+<a id='n829' href='#n829'>829</a>
+<a id='n830' href='#n830'>830</a>
+<a id='n831' href='#n831'>831</a>
+<a id='n832' href='#n832'>832</a>
+<a id='n833' href='#n833'>833</a>
+<a id='n834' href='#n834'>834</a>
+<a id='n835' href='#n835'>835</a>
+<a id='n836' href='#n836'>836</a>
+<a id='n837' href='#n837'>837</a>
+<a id='n838' href='#n838'>838</a>
+<a id='n839' href='#n839'>839</a>
+<a id='n840' href='#n840'>840</a>
+<a id='n841' href='#n841'>841</a>
+<a id='n842' href='#n842'>842</a>
+<a id='n843' href='#n843'>843</a>
+<a id='n844' href='#n844'>844</a>
+<a id='n845' href='#n845'>845</a>
+<a id='n846' href='#n846'>846</a>
+<a id='n847' href='#n847'>847</a>
+<a id='n848' href='#n848'>848</a>
+<a id='n849' href='#n849'>849</a>
+<a id='n850' href='#n850'>850</a>
+<a id='n851' href='#n851'>851</a>
+<a id='n852' href='#n852'>852</a>
+<a id='n853' href='#n853'>853</a>
+<a id='n854' href='#n854'>854</a>
+<a id='n855' href='#n855'>855</a>
+<a id='n856' href='#n856'>856</a>
+<a id='n857' href='#n857'>857</a>
+<a id='n858' href='#n858'>858</a>
+<a id='n859' href='#n859'>859</a>
+<a id='n860' href='#n860'>860</a>
+<a id='n861' href='#n861'>861</a>
+<a id='n862' href='#n862'>862</a>
+<a id='n863' href='#n863'>863</a>
+<a id='n864' href='#n864'>864</a>
+<a id='n865' href='#n865'>865</a>
+<a id='n866' href='#n866'>866</a>
+<a id='n867' href='#n867'>867</a>
+<a id='n868' href='#n868'>868</a>
+<a id='n869' href='#n869'>869</a>
+<a id='n870' href='#n870'>870</a>
+<a id='n871' href='#n871'>871</a>
+<a id='n872' href='#n872'>872</a>
+<a id='n873' href='#n873'>873</a>
+<a id='n874' href='#n874'>874</a>
+<a id='n875' href='#n875'>875</a>
+<a id='n876' href='#n876'>876</a>
+<a id='n877' href='#n877'>877</a>
+<a id='n878' href='#n878'>878</a>
+<a id='n879' href='#n879'>879</a>
+<a id='n880' href='#n880'>880</a>
+<a id='n881' href='#n881'>881</a>
+<a id='n882' href='#n882'>882</a>
+<a id='n883' href='#n883'>883</a>
+<a id='n884' href='#n884'>884</a>
+<a id='n885' href='#n885'>885</a>
+<a id='n886' href='#n886'>886</a>
+<a id='n887' href='#n887'>887</a>
+<a id='n888' href='#n888'>888</a>
+<a id='n889' href='#n889'>889</a>
+<a id='n890' href='#n890'>890</a>
+<a id='n891' href='#n891'>891</a>
+<a id='n892' href='#n892'>892</a>
+<a id='n893' href='#n893'>893</a>
+<a id='n894' href='#n894'>894</a>
+<a id='n895' href='#n895'>895</a>
+<a id='n896' href='#n896'>896</a>
+<a id='n897' href='#n897'>897</a>
+<a id='n898' href='#n898'>898</a>
+<a id='n899' href='#n899'>899</a>
+<a id='n900' href='#n900'>900</a>
+<a id='n901' href='#n901'>901</a>
+<a id='n902' href='#n902'>902</a>
+<a id='n903' href='#n903'>903</a>
+<a id='n904' href='#n904'>904</a>
+<a id='n905' href='#n905'>905</a>
+<a id='n906' href='#n906'>906</a>
+<a id='n907' href='#n907'>907</a>
+<a id='n908' href='#n908'>908</a>
+<a id='n909' href='#n909'>909</a>
+<a id='n910' href='#n910'>910</a>
+<a id='n911' href='#n911'>911</a>
+<a id='n912' href='#n912'>912</a>
+<a id='n913' href='#n913'>913</a>
+<a id='n914' href='#n914'>914</a>
+<a id='n915' href='#n915'>915</a>
+<a id='n916' href='#n916'>916</a>
+<a id='n917' href='#n917'>917</a>
+<a id='n918' href='#n918'>918</a>
+<a id='n919' href='#n919'>919</a>
+<a id='n920' href='#n920'>920</a>
+<a id='n921' href='#n921'>921</a>
+<a id='n922' href='#n922'>922</a>
+<a id='n923' href='#n923'>923</a>
+<a id='n924' href='#n924'>924</a>
+<a id='n925' href='#n925'>925</a>
+<a id='n926' href='#n926'>926</a>
+<a id='n927' href='#n927'>927</a>
+<a id='n928' href='#n928'>928</a>
+<a id='n929' href='#n929'>929</a>
+<a id='n930' href='#n930'>930</a>
+<a id='n931' href='#n931'>931</a>
+<a id='n932' href='#n932'>932</a>
+<a id='n933' href='#n933'>933</a>
+<a id='n934' href='#n934'>934</a>
+<a id='n935' href='#n935'>935</a>
+<a id='n936' href='#n936'>936</a>
+<a id='n937' href='#n937'>937</a>
+<a id='n938' href='#n938'>938</a>
+<a id='n939' href='#n939'>939</a>
+<a id='n940' href='#n940'>940</a>
+<a id='n941' href='#n941'>941</a>
+<a id='n942' href='#n942'>942</a>
+<a id='n943' href='#n943'>943</a>
+<a id='n944' href='#n944'>944</a>
+<a id='n945' href='#n945'>945</a>
+<a id='n946' href='#n946'>946</a>
+<a id='n947' href='#n947'>947</a>
+<a id='n948' href='#n948'>948</a>
+<a id='n949' href='#n949'>949</a>
+<a id='n950' href='#n950'>950</a>
+<a id='n951' href='#n951'>951</a>
+<a id='n952' href='#n952'>952</a>
+<a id='n953' href='#n953'>953</a>
+<a id='n954' href='#n954'>954</a>
+<a id='n955' href='#n955'>955</a>
+<a id='n956' href='#n956'>956</a>
+<a id='n957' href='#n957'>957</a>
+<a id='n958' href='#n958'>958</a>
+<a id='n959' href='#n959'>959</a>
+<a id='n960' href='#n960'>960</a>
+<a id='n961' href='#n961'>961</a>
+<a id='n962' href='#n962'>962</a>
+<a id='n963' href='#n963'>963</a>
+<a id='n964' href='#n964'>964</a>
+<a id='n965' href='#n965'>965</a>
+<a id='n966' href='#n966'>966</a>
+<a id='n967' href='#n967'>967</a>
+<a id='n968' href='#n968'>968</a>
+<a id='n969' href='#n969'>969</a>
+<a id='n970' href='#n970'>970</a>
+<a id='n971' href='#n971'>971</a>
+<a id='n972' href='#n972'>972</a>
+<a id='n973' href='#n973'>973</a>
+<a id='n974' href='#n974'>974</a>
+<a id='n975' href='#n975'>975</a>
+<a id='n976' href='#n976'>976</a>
+<a id='n977' href='#n977'>977</a>
+<a id='n978' href='#n978'>978</a>
+<a id='n979' href='#n979'>979</a>
+<a id='n980' href='#n980'>980</a>
+<a id='n981' href='#n981'>981</a>
+<a id='n982' href='#n982'>982</a>
+<a id='n983' href='#n983'>983</a>
+<a id='n984' href='#n984'>984</a>
+<a id='n985' href='#n985'>985</a>
+<a id='n986' href='#n986'>986</a>
+<a id='n987' href='#n987'>987</a>
+<a id='n988' href='#n988'>988</a>
+<a id='n989' href='#n989'>989</a>
+<a id='n990' href='#n990'>990</a>
+<a id='n991' href='#n991'>991</a>
+<a id='n992' href='#n992'>992</a>
+<a id='n993' href='#n993'>993</a>
+<a id='n994' href='#n994'>994</a>
+<a id='n995' href='#n995'>995</a>
+<a id='n996' href='#n996'>996</a>
+<a id='n997' href='#n997'>997</a>
+<a id='n998' href='#n998'>998</a>
+<a id='n999' href='#n999'>999</a>
+<a id='n1000' href='#n1000'>1000</a>
+<a id='n1001' href='#n1001'>1001</a>
+<a id='n1002' href='#n1002'>1002</a>
+<a id='n1003' href='#n1003'>1003</a>
+<a id='n1004' href='#n1004'>1004</a>
+<a id='n1005' href='#n1005'>1005</a>
+<a id='n1006' href='#n1006'>1006</a>
+<a id='n1007' href='#n1007'>1007</a>
+<a id='n1008' href='#n1008'>1008</a>
+<a id='n1009' href='#n1009'>1009</a>
+<a id='n1010' href='#n1010'>1010</a>
+<a id='n1011' href='#n1011'>1011</a>
+<a id='n1012' href='#n1012'>1012</a>
+<a id='n1013' href='#n1013'>1013</a>
+<a id='n1014' href='#n1014'>1014</a>
+<a id='n1015' href='#n1015'>1015</a>
+<a id='n1016' href='#n1016'>1016</a>
+<a id='n1017' href='#n1017'>1017</a>
+<a id='n1018' href='#n1018'>1018</a>
+<a id='n1019' href='#n1019'>1019</a>
+<a id='n1020' href='#n1020'>1020</a>
+<a id='n1021' href='#n1021'>1021</a>
+<a id='n1022' href='#n1022'>1022</a>
+<a id='n1023' href='#n1023'>1023</a>
+<a id='n1024' href='#n1024'>1024</a>
+<a id='n1025' href='#n1025'>1025</a>
+<a id='n1026' href='#n1026'>1026</a>
+<a id='n1027' href='#n1027'>1027</a>
+<a id='n1028' href='#n1028'>1028</a>
+<a id='n1029' href='#n1029'>1029</a>
+<a id='n1030' href='#n1030'>1030</a>
+<a id='n1031' href='#n1031'>1031</a>
+<a id='n1032' href='#n1032'>1032</a>
+<a id='n1033' href='#n1033'>1033</a>
+<a id='n1034' href='#n1034'>1034</a>
+<a id='n1035' href='#n1035'>1035</a>
+<a id='n1036' href='#n1036'>1036</a>
+<a id='n1037' href='#n1037'>1037</a>
+<a id='n1038' href='#n1038'>1038</a>
+<a id='n1039' href='#n1039'>1039</a>
+<a id='n1040' href='#n1040'>1040</a>
+<a id='n1041' href='#n1041'>1041</a>
+<a id='n1042' href='#n1042'>1042</a>
+<a id='n1043' href='#n1043'>1043</a>
+<a id='n1044' href='#n1044'>1044</a>
+<a id='n1045' href='#n1045'>1045</a>
+<a id='n1046' href='#n1046'>1046</a>
+<a id='n1047' href='#n1047'>1047</a>
+<a id='n1048' href='#n1048'>1048</a>
+<a id='n1049' href='#n1049'>1049</a>
+<a id='n1050' href='#n1050'>1050</a>
+<a id='n1051' href='#n1051'>1051</a>
+<a id='n1052' href='#n1052'>1052</a>
+<a id='n1053' href='#n1053'>1053</a>
+<a id='n1054' href='#n1054'>1054</a>
+<a id='n1055' href='#n1055'>1055</a>
+<a id='n1056' href='#n1056'>1056</a>
+<a id='n1057' href='#n1057'>1057</a>
+<a id='n1058' href='#n1058'>1058</a>
+<a id='n1059' href='#n1059'>1059</a>
+<a id='n1060' href='#n1060'>1060</a>
+<a id='n1061' href='#n1061'>1061</a>
+<a id='n1062' href='#n1062'>1062</a>
+<a id='n1063' href='#n1063'>1063</a>
+<a id='n1064' href='#n1064'>1064</a>
+<a id='n1065' href='#n1065'>1065</a>
+<a id='n1066' href='#n1066'>1066</a>
+<a id='n1067' href='#n1067'>1067</a>
+<a id='n1068' href='#n1068'>1068</a>
+<a id='n1069' href='#n1069'>1069</a>
+<a id='n1070' href='#n1070'>1070</a>
+<a id='n1071' href='#n1071'>1071</a>
+<a id='n1072' href='#n1072'>1072</a>
+<a id='n1073' href='#n1073'>1073</a>
+<a id='n1074' href='#n1074'>1074</a>
+<a id='n1075' href='#n1075'>1075</a>
+</pre></td>
+<td class='lines'><pre><code><style>.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #ffffff; }
+.highlight .c { color: #888888 } /* Comment */
+.highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.highlight .k { color: #008800; font-weight: bold } /* Keyword */
+.highlight .cm { color: #888888 } /* Comment.Multiline */
+.highlight .cp { color: #cc0000; font-weight: bold } /* Comment.Preproc */
+.highlight .c1 { color: #888888 } /* Comment.Single */
+.highlight .cs { color: #cc0000; font-weight: bold; background-color: #fff0f0 } /* Comment.Special */
+.highlight .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #aa0000 } /* Generic.Error */
+.highlight .gh { color: #333333 } /* Generic.Heading */
+.highlight .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #555555 } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #666666 } /* Generic.Subheading */
+.highlight .gt { color: #aa0000 } /* Generic.Traceback */
+.highlight .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008800; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008800 } /* Keyword.Pseudo */
+.highlight .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #888888; font-weight: bold } /* Keyword.Type */
+.highlight .m { color: #0000DD; font-weight: bold } /* Literal.Number */
+.highlight .s { color: #dd2200; background-color: #fff0f0 } /* Literal.String */
+.highlight .na { color: #336699 } /* Name.Attribute */
+.highlight .nb { color: #003388 } /* Name.Builtin */
+.highlight .nc { color: #bb0066; font-weight: bold } /* Name.Class */
+.highlight .no { color: #003366; font-weight: bold } /* Name.Constant */
+.highlight .nd { color: #555555 } /* Name.Decorator */
+.highlight .ne { color: #bb0066; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0066bb; font-weight: bold } /* Name.Function */
+.highlight .nl { color: #336699; font-style: italic } /* Name.Label */
+.highlight .nn { color: #bb0066; font-weight: bold } /* Name.Namespace */
+.highlight .py { color: #336699; font-weight: bold } /* Name.Property */
+.highlight .nt { color: #bb0066; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #336699 } /* Name.Variable */
+.highlight .ow { color: #008800 } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #0000DD; font-weight: bold } /* Literal.Number.Bin */
+.highlight .mf { color: #0000DD; font-weight: bold } /* Literal.Number.Float */
+.highlight .mh { color: #0000DD; font-weight: bold } /* Literal.Number.Hex */
+.highlight .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.highlight .mo { color: #0000DD; font-weight: bold } /* Literal.Number.Oct */
+.highlight .sb { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Backtick */
+.highlight .sc { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Char */
+.highlight .sd { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Doc */
+.highlight .s2 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Double */
+.highlight .se { color: #0044dd; background-color: #fff0f0 } /* Literal.String.Escape */
+.highlight .sh { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Heredoc */
+.highlight .si { color: #3333bb; background-color: #fff0f0 } /* Literal.String.Interpol */
+.highlight .sx { color: #22bb22; background-color: #f0fff0 } /* Literal.String.Other */
+.highlight .sr { color: #008800; background-color: #fff0ff } /* Literal.String.Regex */
+.highlight .s1 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Single */
+.highlight .ss { color: #aa6600; background-color: #fff0f0 } /* Literal.String.Symbol */
+.highlight .bp { color: #003388 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #336699 } /* Name.Variable.Class */
+.highlight .vg { color: #dd7700 } /* Name.Variable.Global */
+.highlight .vi { color: #3333bb } /* Name.Variable.Instance */
+.highlight .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre>                    Tor Rendezvous Specification
+
+0. Overview and preliminaries
+
+      The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL
+      NOT&quot;, &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;,  &quot;MAY&quot;, and
+      &quot;OPTIONAL&quot; in this document are to be interpreted as described in
+      RFC 2119.
+
+   Read
+   https://svn.torproject.org/svn/projects/design-paper/tor-design.html#sec:rendezvous
+   before you read this specification. It will make more sense.
+
+   Rendezvous points provide location-hidden services (server
+   anonymity) for the onion routing network. With rendezvous points,
+   Bob can offer a TCP service (say, a webserver) via the onion
+   routing network, without revealing the IP of that service.
+
+   Bob does this by anonymously advertising a public key for his
+   service, along with a list of onion routers to act as &quot;Introduction
+   Points&quot; for his service.  He creates forward circuits to those
+   introduction points, and tells them about his service.  To
+   connect to Bob, Alice first builds a circuit to an OR to act as
+   her &quot;Rendezvous Point.&quot; She then connects to one of Bob&#39;s chosen
+   introduction points, and asks it to tell him about her Rendezvous
+   Point (RP).  If Bob chooses to answer, he builds a circuit to her
+   RP, and tells it to connect him to Alice.  The RP joins their
+   circuits together, and begins relaying cells.  Alice&#39;s &#39;BEGIN&#39;
+   cells are received directly by Bob&#39;s OP, which passes data to
+   and from the local server implementing Bob&#39;s service.
+
+   Below we describe a network-level specification of this service,
+   along with interfaces to make this process transparent to Alice
+   (so long as she is using an OP).
+
+0.1. Notation, conventions and prerequisites
+
+   In the specifications below, we use the same notation and terminology
+   as in &quot;tor-spec.txt&quot;.  The service specified here also requires the
+   existence of an onion routing network as specified in that file.
+
+        H(x) is a SHA1 digest of x.
+        PKSign(SK,x) is a PKCS.1-padded RSA signature of x with SK.
+        PKEncrypt(SK,x) is a PKCS.1-padded RSA encryption of x with SK.
+        Public keys are all RSA, and encoded in ASN.1.
+        All integers are stored in network (big-endian) order.
+        All symmetric encryption uses AES in counter mode, except where
+            otherwise noted.
+
+   In all discussions, &quot;Alice&quot; will refer to a user connecting to a
+   location-hidden service, and &quot;Bob&quot; will refer to a user running a
+   location-hidden service.
+
+   An OP is (as defined elsewhere) an &quot;Onion Proxy&quot; or Tor client.
+
+   An OR is (as defined elsewhere) an &quot;Onion Router&quot; or Tor server.
+
+   An &quot;Introduction point&quot; is a Tor server chosen to be Bob&#39;s medium-term
+   &#39;meeting place&#39;.  A &quot;Rendezvous point&quot; is a Tor server chosen by Alice to
+   be a short-term communication relay between her and Bob.  All Tor servers
+   potentially act as introduction and rendezvous points.
+
+0.2. Protocol outline
+
+   1. Bob-&gt;Bob&#39;s OP: &quot;Offer IP:Port as public-key-name:Port&quot;. [configuration]
+      (We do not specify this step; it is left to the implementor of
+      Bob&#39;s OP.)
+
+   2. Bob&#39;s OP generates a long-term keypair.
+
+   3. Bob&#39;s OP-&gt;Introduction point via Tor: [introduction setup]
+        &quot;This public key is (currently) associated to me.&quot;
+
+   4. Bob&#39;s OP-&gt;directory service via Tor: publishes Bob&#39;s service descriptor
+      [advertisement]
+        &quot;Meet public-key X at introduction point A, B, or C.&quot; (signed)
+
+   5. Out of band, Alice receives a z.onion:port address.
+      She opens a SOCKS connection to her OP, and requests z.onion:port.
+
+   6. Alice&#39;s OP retrieves Bob&#39;s descriptor via Tor. [descriptor lookup.]
+
+   7. Alice&#39;s OP chooses a rendezvous point, opens a circuit to that
+      rendezvous point, and establishes a rendezvous circuit. [rendezvous
+      setup.]
+
+   8. Alice connects to the Introduction point via Tor, and tells it about
+      her rendezvous point.  (Encrypted to Bob.)  [Introduction 1]
+
+   9. The Introduction point passes this on to Bob&#39;s OP via Tor, along the
+      introduction circuit. [Introduction 2]
+
+  10. Bob&#39;s OP decides whether to connect to Alice, and if so, creates a
+      circuit to Alice&#39;s RP via Tor.  Establishes a shared circuit.
+      [Rendezvous 1]
+
+  11. The Rendezvous point forwards Bob&#39;s confirmation to Alice&#39;s OP.
+      [Rendezvous 2]
+
+  12. Alice&#39;s OP sends begin cells to Bob&#39;s OP.  [Connection]
+
+0.3. Constants and new cell types
+
+  Relay cell types
+      32 -- RELAY_COMMAND_ESTABLISH_INTRO
+      33 -- RELAY_COMMAND_ESTABLISH_RENDEZVOUS
+      34 -- RELAY_COMMAND_INTRODUCE1
+      35 -- RELAY_COMMAND_INTRODUCE2
+      36 -- RELAY_COMMAND_RENDEZVOUS1
+      37 -- RELAY_COMMAND_RENDEZVOUS2
+      38 -- RELAY_COMMAND_INTRO_ESTABLISHED
+      39 -- RELAY_COMMAND_RENDEZVOUS_ESTABLISHED
+      40 -- RELAY_COMMAND_INTRODUCE_ACK
+
+0.4. Version overview
+
+   There are several parts in the hidden service protocol that have
+   changed over time, each of them having its own version number, whereas
+   other parts remained the same. The following list of potentially
+   versioned protocol parts should help reduce some confusion:
+
+   - Hidden service descriptor: the binary-based v0 was the default for a
+     long time, and an ASCII-based v2 has been added by proposal 114. The
+     v0 descriptor format has been deprecated in 0.2.2.1-alpha. See 1.3.
+
+   - Hidden service descriptor propagation mechanism: currently related to
+     the hidden service descriptor version -- v0 publishes to the original
+     hs directory authorities, whereas v2 publishes to a rotating subset
+     of relays with the &quot;HSDir&quot; flag; see 1.4 and 1.6.
+
+   - Introduction protocol for how to generate an introduction cell:
+     v0 specified a nickname for the rendezvous point and assumed the
+     relay would know about it, whereas v2 now specifies IP address,
+     port, and onion key so the relay doesn&#39;t need to already recognize
+     it. See 1.8.
+
+1. The Protocol
+
+1.1. Bob configures his local OP.
+
+   We do not specify a format for the OP configuration file.  However,
+   OPs SHOULD allow Bob to provide more than one advertised service
+   per OP, and MUST allow Bob to specify one or more virtual ports per
+   service.  Bob provides a mapping from each of these virtual ports
+   to a local IP:Port pair.
+
+1.2. Bob&#39;s OP establishes his introduction points.
+
+   The first time the OP provides an advertised service, it generates
+   a public/private keypair (stored locally).
+
+   The OP chooses a small number of Tor servers as introduction points.
+   The OP establishes a new introduction circuit to each introduction
+   point.  These circuits MUST NOT be used for anything but hidden service
+   introduction.  To establish the introduction, Bob sends a
+   RELAY_COMMAND_ESTABLISH_INTRO cell, containing:
+
+        KL   Key length                             [2 octets]
+        PK   Bob&#39;s public key or service key        [KL octets]
+        HS   Hash of session info                   [20 octets]
+        SIG  Signature of above information         [variable]
+
+   KL is the length of PK, in octets.
+
+   To prevent replay attacks, the HS field contains a SHA-1 hash based on the
+   shared secret KH between Bob&#39;s OP and the introduction point, as
+   follows:
+       HS = H(KH | &quot;INTRODUCE&quot;)
+   That is:
+       HS = H(KH | [49 4E 54 52 4F 44 55 43 45])
+   (KH, as specified in tor-spec.txt, is H(g^xy | [00]) .)
+
+   Upon receiving such a cell, the OR first checks that the signature is
+   correct with the included public key.  If so, it checks whether HS is
+   correct given the shared state between Bob&#39;s OP and the OR.  If either
+   check fails, the OP discards the cell; otherwise, it associates the
+   circuit with Bob&#39;s public key, and dissociates any other circuits
+   currently associated with PK.  On success, the OR sends Bob a
+   RELAY_COMMAND_INTRO_ESTABLISHED cell with an empty payload.
+
+   Bob&#39;s OP uses either Bob&#39;s public key or a freshly generated, single-use
+   service key in the RELAY_COMMAND_ESTABLISH_INTRO cell, depending on the
+   configured hidden service descriptor version.  The public key is used for
+   v0 descriptors, the service key for v2 descriptors.  In the latter case, the
+   service keys of all introduction points are included in the v2 hidden
+   service descriptor together with the other introduction point information.
+   The reason is that the introduction point does not need to and therefore
+   should not know for which hidden service it works, so as to prevent it from
+   tracking the hidden service&#39;s activity.  If the hidden service is configured
+   to publish both v0 and v2 descriptors, two separate sets of introduction
+   points are established.
+
+1.3. Bob&#39;s OP generates service descriptors.
+
+   For versions before 0.2.2.1-alpha, Bob&#39;s OP periodically generates and
+   publishes a descriptor of type &quot;V0&quot;.
+
+   The &quot;V0&quot; descriptor contains:
+
+         KL    Key length                            [2 octets]
+         PK    Bob&#39;s public key                      [KL octets]
+         TS    A timestamp                           [4 octets]
+         NI    Number of introduction points         [2 octets]
+         Ipt   A list of NUL-terminated ORs          [variable]
+         SIG   Signature of above fields             [variable]
+
+   TS is the number of seconds elapsed since Jan 1, 1970.
+
+   The members of Ipt may be either (a) nicknames, or (b) identity key
+   digests, encoded in hex, and prefixed with a &#39;$&#39;.  Clients must
+   accept both forms. Services must only generate the second form.
+   Once 0.0.9.x is obsoleted, we can drop the first form.
+
+   [It&#39;s ok for Bob to advertise 0 introduction points. He might want
+    to do that if he previously advertised some introduction points,
+    and now he doesn&#39;t have any. -RD]
+
+   Beginning with 0.2.0.10-alpha, Bob&#39;s OP encodes &quot;V2&quot; descriptors in
+   addition to (or instead of) &quot;V0&quot; descriptors. The format of a &quot;V2&quot;
+   descriptor is as follows:
+
+     &quot;rendezvous-service-descriptor&quot; SP descriptor-id NL
+
+       [At start, exactly once]
+       [No extra arguments]
+
+       Indicates the beginning of the descriptor. &quot;descriptor-id&quot; is a
+       periodically changing identifier of 160 bits formatted as 32 base32
+       chars that is calculated by the hidden service and its clients. The
+       &quot;descriptor-id&quot; is calculated by performing the following operation:
+
+         descriptor-id =
+             H(permanent-id | H(time-period | descriptor-cookie | replica))
+
+       &quot;permanent-id&quot; is the permanent identifier of the hidden service,
+       consisting of 80 bits. It can be calculated by computing the hash value
+       of the public hidden service key and truncating after the first 80 bits:
+
+         permanent-id = H(public-key)[:10]
+
+       Note: If Bob&#39;s OP has &quot;stealth&quot; authorization enabled (see Section 2.2),
+       it uses the client key in place of the public hidden service key.
+
+       &quot;H(time-period | descriptor-cookie | replica)&quot; is the (possibly
+       secret) id part that is necessary to verify that the hidden service is
+       the true originator of this descriptor and that is therefore contained
+       in the descriptor, too. The descriptor ID can only be created by the
+       hidden service and its clients, but the &quot;signature&quot; below can only be
+       created by the service.
+
+       &quot;time-period&quot; changes periodically as a function of time and
+       &quot;permanent-id&quot;. The current value for &quot;time-period&quot; can be calculated
+       using the following formula:
+
+         time-period = (current-time + permanent-id-byte * 86400 / 256)
+                         / 86400
+
+       &quot;current-time&quot; contains the current system time in seconds since
+       1970-01-01 00:00, e.g. 1188241957. &quot;permanent-id-byte&quot; is the first
+       (unsigned) byte of the permanent identifier (which is in network
+       order), e.g. 143. Adding the product of &quot;permanent-id-byte&quot; and
+       86400 (seconds per day), divided by 256, prevents &quot;time-period&quot; from
+       changing for all descriptors at the same time of the day. The result
+       of the overall operation is a (network-ordered) 32-bit integer, e.g.
+       13753 or 0x000035B9 with the example values given above.
+
+       &quot;descriptor-cookie&quot; is an optional secret password of 128 bits that
+       is shared between the hidden service provider and its clients. If the
+       descriptor-cookie is left out, the input to the hash function is 128
+       bits shorter.  [No extra arguments]
+
+       &quot;replica&quot; denotes the number of the replica. A service publishes
+       multiple descriptors with different descriptor IDs in order to
+       distribute them to different places on the ring.
+
+     &quot;version&quot; SP version-number NL
+
+       [Exactly once]
+       [No extra arguments]
+
+       The version number of this descriptor&#39;s format. Version numbers are a
+       positive integer.
+
+     &quot;permanent-key&quot; NL a public key in PEM format
+
+       [Exactly once]
+       [No extra arguments]
+
+       The public key of the hidden service which is required to verify the
+       &quot;descriptor-id&quot; and the &quot;signature&quot;.
+
+     &quot;secret-id-part&quot; SP secret-id-part NL
+
+       [Exactly once]
+       [No extra arguments]
+
+       The result of the following operation as explained above, formatted as
+       32 base32 chars. Using this secret id part, everyone can verify that
+       the signed descriptor belongs to &quot;descriptor-id&quot;.
+
+         secret-id-part = H(time-period | descriptor-cookie | replica)
+
+     &quot;publication-time&quot; SP YYYY-MM-DD HH:MM:SS NL
+
+       [Exactly once]
+
+       A timestamp when this descriptor has been created.  It should be
+       rounded down to the nearest hour.
+
+     &quot;protocol-versions&quot; SP version-string NL
+
+       [Exactly once]
+       [No extra arguments]
+
+       A comma-separated list of recognized and permitted version numbers
+       for use in INTRODUCE cells; these versions are described in section
+       1.8 below. Version numbers are positive integers.
+
+     &quot;introduction-points&quot; NL encrypted-string
+
+       [At most once]
+       [No extra arguments]
+
+       A list of introduction points. If the optional &quot;descriptor-cookie&quot; is
+       used, this list is encrypted with AES in CTR mode with a random
+       initialization vector of 128 bits that is written to
+       the beginning of the encrypted string, and the &quot;descriptor-cookie&quot; as
+       secret key of 128 bits length.
+
+       The string containing the introduction point data (either encrypted
+       or not) is encoded in base64, and surrounded with
+       &quot;-----BEGIN MESSAGE-----&quot; and &quot;-----END MESSAGE-----&quot;.
+
+       A maximum of 10 introduction point entries may follow, each containing
+       the following data:
+
+         &quot;introduction-point&quot; SP identifier NL
+
+           [At start, exactly once]
+           [No extra arguments]
+
+           The identifier of this introduction point: the base32 encoded
+           hash of this introduction point&#39;s identity key.
+
+         &quot;ip-address&quot; SP ip4 NL
+
+           [Exactly once]
+           [No extra arguments]
+
+           The IP address of this introduction point.
+
+         &quot;onion-port&quot; SP port NL
+
+           [Exactly once]
+           [No extra arguments]
+
+           The TCP port on which the introduction point is listening for
+           incoming onion requests.
+
+         &quot;onion-key&quot; NL a public key in PEM format
+
+           [Exactly once]
+           [No extra arguments]
+
+           The public key that can be used to encrypt messages to this
+           introduction point.
+
+         &quot;service-key&quot; NL a public key in PEM format
+
+           [Exactly once]
+           [No extra arguments]
+
+           The public key that can be used to encrypt messages to the hidden
+           service.
+
+         &quot;intro-authentication&quot; auth-type auth-data NL
+
+           [Any number]
+
+           The introduction-point-specific authentication data can be used
+           to perform client authentication. This data depends on the
+           selected introduction point as opposed to &quot;service-authentication&quot;
+           above. The format of auth-data (base64-encoded or PEM format)
+           depends on auth-type. See section 2 of this document for details
+           on auth mechanisms.
+
+        (This ends the fields in the encrypted portion of the descriptor.)
+
+       [It&#39;s ok for Bob to advertise 0 introduction points. He might want
+        to do that if he previously advertised some introduction points,
+        and now he doesn&#39;t have any. -RD]
+
+     &quot;signature&quot; NL signature-string
+
+       [At end, exactly once]
+       [No extra arguments]
+
+       A signature of all fields above with the private key of the hidden
+       service.
+
+1.3.1. Other descriptor formats we don&#39;t use.
+
+   Support for the V0 descriptor format was dropped in 0.2.2.0-alpha-dev:
+
+         KL    Key length                            [2 octets]
+         PK    Bob&#39;s public key                      [KL octets]
+         TS    A timestamp                           [4 octets]
+         NI    Number of introduction points         [2 octets]
+         Ipt   A list of NUL-terminated ORs          [variable]
+         SIG   Signature of above fields             [variable]
+
+   KL is the length of PK, in octets.
+   TS is the number of seconds elapsed since Jan 1, 1970.
+
+   The members of Ipt may be either (a) nicknames, or (b) identity key
+   digests, encoded in hex, and prefixed with a &#39;$&#39;.
+
+   The V1 descriptor format was understood and accepted from
+   0.1.1.5-alpha-cvs to 0.2.0.6-alpha-dev, but no Tors generated it and
+   it was removed:
+
+         V     Format byte: set to 255               [1 octet]
+         V     Version byte: set to 1                [1 octet]
+         KL    Key length                            [2 octets]
+         PK    Bob&#39;s public key                      [KL octets]
+         TS    A timestamp                           [4 octets]
+         PROTO Protocol versions: bitmask            [2 octets]
+         NI    Number of introduction points         [2 octets]
+         For each introduction point: (as in INTRODUCE2 cells)
+             IP     Introduction point&#39;s address     [4 octets]
+             PORT   Introduction point&#39;s OR port     [2 octets]
+             ID     Introduction point identity ID   [20 octets]
+             KLEN   Length of onion key              [2 octets]
+             KEY    Introduction point onion key     [KLEN octets]
+         SIG   Signature of above fields             [variable]
+
+   A hypothetical &quot;V1&quot; descriptor, that has never been used but might
+   be useful for historical reasons, contains:
+
+         V     Format byte: set to 255               [1 octet]
+         V     Version byte: set to 1                [1 octet]
+         KL    Key length                            [2 octets]
+         PK    Bob&#39;s public key                      [KL octets]
+         TS    A timestamp                           [4 octets]
+         PROTO Rendezvous protocol versions: bitmask [2 octets]
+         NA    Number of auth mechanisms accepted    [1 octet]
+         For each auth mechanism:
+             AUTHT  The auth type that is supported  [2 octets]
+             AUTHL  Length of auth data              [1 octet]
+             AUTHD  Auth data                        [variable]
+         NI    Number of introduction points         [2 octets]
+         For each introduction point: (as in INTRODUCE2 cells)
+             ATYPE  An address type (typically 4)    [1 octet]
+             ADDR   Introduction point&#39;s IP address  [4 or 16 octets]
+             PORT   Introduction point&#39;s OR port     [2 octets]
+             AUTHT  The auth type that is supported  [2 octets]
+             AUTHL  Length of auth data              [1 octet]
+             AUTHD  Auth data                        [variable]
+             ID     Introduction point identity ID   [20 octets]
+             KLEN   Length of onion key              [2 octets]
+             KEY    Introduction point onion key     [KLEN octets]
+         SIG   Signature of above fields             [variable]
+
+   AUTHT specifies which authentication/authorization mechanism is
+   required by the hidden service or the introduction point. AUTHD
+   is arbitrary data that can be associated with an auth approach.
+   Currently only AUTHT of [00 00] is supported, with an AUTHL of 0.
+   See section 2 of this document for details on auth mechanisms.
+
+1.4. Bob&#39;s OP advertises his service descriptor(s).
+
+   Bob&#39;s OP advertises his service descriptor to a fixed set of v0 hidden
+   service directory servers and/or a changing subset of all v2 hidden service
+   directories.
+
+   For versions before 0.2.2.1-alpha, Bob&#39;s OP opens a stream to each v0
+   directory server&#39;s directory port via Tor.  (He may re-use old circuits for
+   this.)  Over this stream, Bob&#39;s OP makes an HTTP &#39;POST&#39; request, to a URL
+   &quot;/tor/rendezvous/publish&quot; relative to the directory server&#39;s root,
+   containing as its body Bob&#39;s service descriptor.
+
+   Upon receiving a descriptor, the directory server checks the signature,
+   and discards the descriptor if the signature does not match the enclosed
+   public key.  Next, the directory server checks the timestamp.  If the
+   timestamp is more than 24 hours in the past or more than 1 hour in the
+   future, or the directory server already has a newer descriptor with the
+   same public key, the server discards the descriptor.  Otherwise, the
+   server discards any older descriptors with the same public key and
+   version format, and associates the new descriptor with the public key.
+   The directory server remembers this descriptor for at least 24 hours
+   after its timestamp.  At least every 18 hours, Bob&#39;s OP uploads a
+   fresh descriptor.
+
+   If Bob&#39;s OP is configured to publish v2 descriptors, it does so to a
+   changing subset of all v2 hidden service directories instead of the
+   authoritative directory servers. Therefore, Bob&#39;s OP opens a stream via
+   Tor to each responsible hidden service directory. (He may re-use old
+   circuits for this.) Over this stream, Bob&#39;s OP makes an HTTP &#39;POST&#39;
+   request to a URL &quot;/tor/rendezvous2/publish&quot; relative to the hidden service
+   directory&#39;s root, containing as its body Bob&#39;s service descriptor.
+
+   [XXX022 Reusing old circuits for HS dir posts is very bad. Do we really
+    do that? --RR]
+
+   At any time, there are 6 hidden service directories responsible for
+   keeping replicas of a descriptor; they consist of 2 sets of 3 hidden
+   service directories with consecutive onion IDs. Bob&#39;s OP learns about
+   the complete list of hidden service directories by filtering the
+   consensus status document received from the directory authorities. A
+   hidden service directory is deemed responsible for a descriptor ID if
+   it has the HSDir flag and its identity digest is one of the first three
+   identity digests of HSDir relays following the descriptor ID in a
+   circular list. A hidden service directory will only accept a descriptor
+   whose timestamp is no more than three days before or one day after the
+   current time according to the directory&#39;s clock.
+
+   Bob&#39;s OP publishes a new v2 descriptor once an hour or whenever its
+   content changes. V2 descriptors can be found by clients within a given
+   time period of 24 hours, after which they change their ID as described
+   under 1.3. If a published descriptor would be valid for less than 60
+   minutes (= 2 x 30 minutes to allow the server to be 30 minutes behind
+   and the client 30 minutes ahead), Bob&#39;s OP publishes the descriptor
+   under the ID of both, the current and the next publication period.
+
+1.5. Alice receives a z.onion address.
+
+   When Alice receives a pointer to a location-hidden service, it is as a
+   hostname of the form &quot;z.onion&quot;, where z is a base32 encoding of a
+   10-octet hash of Bob&#39;s service&#39;s public key, computed as follows:
+
+         1. Let H = H(PK).
+         2. Let H&#39; = the first 80 bits of H, considering each octet from
+            most significant bit to least significant bit.
+         3. Generate a 16-character encoding of H&#39;, using base32 as defined
+            in RFC 4648.
+
+   (We only use 80 bits instead of the 160 bits from SHA1 because we
+   don&#39;t need to worry about arbitrary collisions, and because it will
+   make handling the url&#39;s more convenient.)
+
+   [Yes, numbers are allowed at the beginning.  See RFC 1123. -NM]
+
+1.6. Alice&#39;s OP retrieves a service descriptor.
+
+   Alice&#39;s OP fetches the service descriptor from the fixed set of v0 hidden
+   service directory servers and/or a changing subset of all v2 hidden service
+   directories.
+
+   For versions before 0.2.2.1-alpha, Alice&#39;s OP opens a stream to a directory
+   server via Tor, and makes an HTTP GET request for the document
+   &#39;/tor/rendezvous/&lt;z&gt;&#39;, where &#39;&lt;z&gt;&#39; is replaced with the encoding of Bob&#39;s
+   public key as described above. (She may re-use old circuits for this.) The
+   directory replies with a 404 HTTP response if it does not recognize &lt;z&gt;,
+   and otherwise returns Bob&#39;s most recently uploaded service descriptor.
+
+   If Alice&#39;s OP receives a 404 response, it tries the other directory
+   servers, and only fails the lookup if none recognize the public key hash.
+
+   Upon receiving a service descriptor, Alice verifies with the same process
+   as the directory server uses, described above in section 1.4.
+
+   The directory server gives a 400 response if it cannot understand Alice&#39;s
+   request.
+
+   Alice should cache the descriptor locally, but should not use
+   descriptors that are more than 24 hours older than their timestamp.
+   [Caching may make her partitionable, but she fetched it anonymously,
+    and we can&#39;t very well *not* cache it. -RD]
+
+   If Alice&#39;s OP is running 0.2.1.10-alpha or higher, it fetches v2 hidden
+   service descriptors. Versions before 0.2.2.1-alpha are fetching both v0 and
+   v2 descriptors in parallel. Similar to the description in section 1.4,
+   Alice&#39;s OP fetches a v2 descriptor from a randomly chosen hidden service
+   directory out of the changing subset of 6 nodes. If the request is
+   unsuccessful, Alice retries the other remaining responsible hidden service
+   directories in a random order. Alice relies on Bob to care about a potential
+   clock skew between the two by possibly storing two sets of descriptors (see
+   end of section 1.4).
+
+   Alice&#39;s OP opens a stream via Tor to the chosen v2 hidden service
+   directory. (She may re-use old circuits for this.) Over this stream,
+   Alice&#39;s OP makes an HTTP &#39;GET&#39; request for the document
+   &quot;/tor/rendezvous2/&lt;z&gt;&quot;, where z is replaced with the encoding of the
+   descriptor ID. The directory replies with a 404 HTTP response if it does
+   not recognize &lt;z&gt;, and otherwise returns Bob&#39;s most recently uploaded
+   service descriptor.
+
+1.7. Alice&#39;s OP establishes a rendezvous point.
+
+   When Alice requests a connection to a given location-hidden service,
+   and Alice&#39;s OP does not have an established circuit to that service,
+   the OP builds a rendezvous circuit.  It does this by establishing
+   a circuit to a randomly chosen OR, and sending a
+   RELAY_COMMAND_ESTABLISH_RENDEZVOUS cell to that OR.  The body of that cell
+   contains:
+
+        RC   Rendezvous cookie    [20 octets]
+
+   The rendezvous cookie is an arbitrary 20-byte value, chosen randomly by
+   Alice&#39;s OP. Alice SHOULD choose a new rendezvous cookie for each new
+   connection attempt.
+
+   Upon receiving a RELAY_COMMAND_ESTABLISH_RENDEZVOUS cell, the OR associates
+   the RC with the circuit that sent it.  It replies to Alice with an empty
+   RELAY_COMMAND_RENDEZVOUS_ESTABLISHED cell to indicate success.
+
+   Alice&#39;s OP MUST NOT use the circuit which sent the cell for any purpose
+   other than rendezvous with the given location-hidden service.
+
+1.8. Introduction: from Alice&#39;s OP to Introduction Point
+
+   Alice builds a separate circuit to one of Bob&#39;s chosen introduction
+   points, and sends it a RELAY_COMMAND_INTRODUCE1 cell containing:
+
+       Cleartext
+          PK_ID  Identifier for Bob&#39;s PK      [20 octets]
+       Encrypted to Bob&#39;s PK: (in the v0 intro protocol)
+          RP     Rendezvous point&#39;s nickname  [20 octets]
+          RC     Rendezvous cookie            [20 octets]
+          g^x    Diffie-Hellman data, part 1 [128 octets]
+        OR (in the v1 intro protocol)
+          VER    Version byte: set to 1.        [1 octet]
+          RP     Rendezvous point nick or ID  [42 octets]
+          RC     Rendezvous cookie            [20 octets]
+          g^x    Diffie-Hellman data, part 1 [128 octets]
+        OR (in the v2 intro protocol)
+          VER    Version byte: set to 2.        [1 octet]
+          IP     Rendezvous point&#39;s address    [4 octets]
+          PORT   Rendezvous point&#39;s OR port    [2 octets]
+          ID     Rendezvous point identity ID [20 octets]
+          KLEN   Length of onion key           [2 octets]
+          KEY    Rendezvous point onion key [KLEN octets]
+          RC     Rendezvous cookie            [20 octets]
+          g^x    Diffie-Hellman data, part 1 [128 octets]
+        OR (in the v3 intro protocol)
+          VER    Version byte: set to 3.        [1 octet]
+          AUTHT  The auth type that is used     [1 octet]
+          If AUTHT != [00]:
+              AUTHL  Length of auth data           [2 octets]
+              AUTHD  Auth data                     [variable]
+          TS     A timestamp                   [4 octets]
+          IP     Rendezvous point&#39;s address    [4 octets]
+          PORT   Rendezvous point&#39;s OR port    [2 octets]
+          ID     Rendezvous point identity ID [20 octets]
+          KLEN   Length of onion key           [2 octets]
+          KEY    Rendezvous point onion key [KLEN octets]
+          RC     Rendezvous cookie            [20 octets]
+          g^x    Diffie-Hellman data, part 1 [128 octets]
+
+   PK_ID is the hash of Bob&#39;s public key or the service key, depending on the
+   hidden service descriptor version. In case of a v0 descriptor, Alice&#39;s OP
+   uses Bob&#39;s public key. If Alice has downloaded a v2 descriptor, she uses
+   the contained public key (&quot;service-key&quot;).
+
+   RP is NUL-padded and terminated. In version 0 of the intro protocol, RP
+   must contain a nickname. In version 1, it must contain EITHER a nickname or
+   an identity key digest that is encoded in hex and prefixed with a &#39;$&#39;.
+
+   The hybrid encryption to Bob&#39;s PK works just like the hybrid
+   encryption in CREATE cells (see tor-spec). Thus the payload of the
+   version 0 RELAY_COMMAND_INTRODUCE1 cell on the wire will contain
+   20+42+16+20+20+128=246 bytes, and the version 1 and version 2
+   introduction formats have other sizes.
+
+   Through Tor 0.2.0.6-alpha, clients only generated the v0 introduction
+   format, whereas hidden services have understood and accepted v0,
+   v1, and v2 since 0.1.1.x. As of Tor 0.2.0.7-alpha and 0.1.2.18,
+   clients switched to using the v2 intro format.
+
+   The Timestampe (TS) field is no longer used in Tor 0.2.3.9-alpha and
+   later.  Clients MAY refrain from sending it; see the
+   &quot;Support022HiddenServices&quot; parameter in dir-spec.txt. Clients SHOULD
+   NOT send a precise timestamp, and should instead round to the nearest
+   10 minutes.
+
+1.9. Introduction: From the Introduction Point to Bob&#39;s OP
+
+   If the Introduction Point recognizes PK_ID as a public key which has
+   established a circuit for introductions as in 1.2 above, it sends the body
+   of the cell in a new RELAY_COMMAND_INTRODUCE2 cell down the corresponding
+   circuit. (If the PK_ID is unrecognized, the RELAY_COMMAND_INTRODUCE1 cell is
+   discarded.)
+
+   After sending the RELAY_COMMAND_INTRODUCE2 cell to Bob, the OR replies to
+   Alice with an empty RELAY_COMMAND_INTRODUCE_ACK cell.  If no
+   RELAY_COMMAND_INTRODUCE2 cell can be sent, the OR replies to Alice with a
+   non-empty cell to indicate an error.  (The semantics of the cell body may be
+   determined later; the current implementation sends a single &#39;1&#39; byte on
+   failure.)
+
+   When Bob&#39;s OP receives the RELAY_COMMAND_INTRODUCE2 cell, it first checks
+   for a replay.  Because of the (undesirable!) malleability of the hybrid
+   encryption, Bob&#39;s OP should only check whether the RSA-encrypted part is
+   replayed.  It does this by keeping, for each introduction key, a list of
+   cryptographic digests of all the RSA-encrypted parts of the INTRODUCE2
+   cells that it&#39;s seen, and dropping any INTRODUCE2 cell whose RSA-encrypted
+   part it has seen before.  When Bob&#39;s OP stops using a given introduction
+   key, it drops the replay cache corresponding to that key.
+
+   (Versions of Tor before 0.2.3.9-alpha used the timestamp in the INTRODUCE2
+   cell to limit the lifetime of entries in the replay cache. This proved to
+   be fragile, due to insufficiently synchronized clients.)
+
+   Assuming that the cell has not been replayed, Bob&#39;s server decrypts it
+   with the private key for the corresponding hidden service, and extracts the
+   rendezvous point&#39;s nickname, the rendezvous cookie, and the value of g^x
+   chosen by Alice.
+
+1.10. Rendezvous
+
+   Bob&#39;s OP builds a new Tor circuit ending at Alice&#39;s chosen rendezvous
+   point, and sends a RELAY_COMMAND_RENDEZVOUS1 cell along this circuit,
+   containing:
+       RC       Rendezvous cookie  [20 octets]
+       g^y      Diffie-Hellman     [128 octets]
+       KH       Handshake digest   [20 octets]
+
+   (Bob&#39;s OP MUST NOT use this circuit for any other purpose.)
+
+   (By default, Bob builds a circuit of at least three hops, *not including*
+   Alice&#39;s chosen rendezvous point.)
+
+   If the RP recognizes RC, it relays the rest of the cell down the
+   corresponding circuit in a RELAY_COMMAND_RENDEZVOUS2 cell, containing:
+
+       g^y      Diffie-Hellman     [128 octets]
+       KH       Handshake digest   [20 octets]
+
+   (If the RP does not recognize the RC, it discards the cell and
+   tears down the circuit.)
+
+   Rendezvous points running Tor version 0.2.9.1-alpha and later are
+   willing to pass on RENDEZVOUS2 cells so long as they contain at least
+   the 20 bytes of cookie. Prior to 0.2.9.1-alpha, the RP refused the
+   cell if it had a payload length different from 20+128+20.
+
+   When Alice&#39;s OP receives a RELAY_COMMAND_RENDEZVOUS2 cell on a circuit which
+   has sent a RELAY_COMMAND_ESTABLISH_RENDEZVOUS cell but which has not yet
+   received a reply, it uses g^y and H(g^xy) to complete the handshake as in
+   the Tor circuit extend process: they establish a 60-octet string as
+       K = SHA1(g^xy | [00]) | SHA1(g^xy | [01]) | SHA1(g^xy | [02])
+   and generate KH, Df, Db, Kf, and Kb as in the KDF-TOR key derivation
+   approach documented in tor-spec.txt.
+
+   As in the TAP handshake, if the KH value derived from KDF-Tor does not
+   match the value in the RENDEZVOUS2 cell, the client must close the
+   circuit.
+
+   Subsequently, the rendezvous point passes relay cells, unchanged, from
+   each of the two circuits to the other.  When Alice&#39;s OP sends RELAY cells
+   along the circuit, it authenticates with Df, and encrypts them with the
+   Kf, then with all of the keys for the ORs in Alice&#39;s side of the circuit;
+   and when Alice&#39;s OP receives RELAY cells from the circuit, it decrypts
+   them with the keys for the ORs in Alice&#39;s side of the circuit, then
+   decrypts them with Kb, and checks integrity with Db.  Bob&#39;s OP does the
+   same, with Kf and Kb interchanged.
+
+1.11. Creating streams
+
+   To open TCP connections to Bob&#39;s location-hidden service, Alice&#39;s OP sends
+   a RELAY_COMMAND_BEGIN cell along the established circuit, using the special
+   address &quot;&quot;, and a chosen port.  Bob&#39;s OP chooses a destination IP and
+   port, based on the configuration of the service connected to the circuit,
+   and opens a TCP stream.  From then on, Bob&#39;s OP treats the stream as an
+   ordinary exit connection.
+   [ Except he doesn&#39;t include addr in the connected cell or the end
+     cell. -RD]
+
+   Alice MAY send multiple RELAY_COMMAND_BEGIN cells along the circuit, to open
+   multiple streams to Bob.  Alice SHOULD NOT send RELAY_COMMAND_BEGIN cells
+   for any other address along her circuit to Bob; if she does, Bob MUST reject
+   them.
+
+1.12. Closing streams
+
+   The payload of a RELAY_END cell begins with a single &#39;reason&#39; byte to
+   describe why the stream is closing, plus optional data (depending on the
+   reason.) These can be found in section 6.3 of tor-spec. The following
+   describes some of the hidden service related reasons.
+
+       1 -- REASON_MISC
+
+       Catch-all for unlisted reasons. Shouldn&#39;t happen much in practice.
+
+       2 -- REASON_RESOLVEFAILED
+
+       Tor tried to fetch the hidden service descriptor from the hsdirs but
+       none of them had it. This implies that the hidden service has not
+       been running in the past 24 hours.
+
+       3 -- REASON_CONNECTREFUSED
+
+       Every step of the rendezvous worked great, and that the hidden
+       service is indeed up and running and configured to use the virtual
+       port you asked for, but there was nothing listening on the other end
+       of that virtual port. For example, the HS&#39;s Tor client is running
+       fine but its apache service is down.
+
+       4 -- REASON_EXITPOLICY
+
+       The destination port that you tried is not configured on the hidden
+       service side. That is, the hidden service was up and reachable, but
+       it isn&#39;t listening on this port. Since Tor 0.2.6.2-alpha and later
+       hidden service don&#39;t send this error code; instead they send back an
+       END cell with reason DONE reason then close the circuit on you. This
+       behavior can be controlled by a config option.
+
+       5 -- REASON_DESTROY
+
+       The circuit closed before you could get a response back -- transient
+       failure, e.g. a relay went down unexpectedly. Trying again might
+       work.
+
+       6 -- REASON_DONE
+
+       Anonymized TCP connection was closed. If you get an END cell with
+       reason DONE, *before* you&#39;ve gotten your CONNECTED cell, that
+       indicates a similar situation to EXITPOLICY, but the hidden service
+       is running 0.2.6.2-alpha or later, and it has now closed the circuit
+       on you.
+
+       7 -- REASON_TIMEOUT
+
+       Either like CONNECTREFUSED above but connect() got the ETIMEDOUT
+       errno, or the client-side timeout of 120 seconds kicked in and we
+       gave up.
+
+       8 -- REASON_NOROUTE
+
+       Like CONNECTREFUSED except the errno at the hidden service when
+       trying to connect() to the service was ENETUNREACH, EHOSTUNREACH,
+       EACCES, or EPERM.
+
+       10 -- REASON_INTERNAL
+
+       Internal error inside the Tor client -- hopefully you will not see
+       this much. Please report if you do!
+
+       12 -- REASON_CONNRESET
+
+       Like CONNECTREFUSED except the errno at the hidden service when
+       trying to connect() to the service was ECONNRESET.
+
+2. Authentication and authorization.
+
+   The rendezvous protocol as described in Section 1 provides a few options
+   for implementing client-side authorization. There are two steps in the
+   rendezvous protocol that can be used for performing client authorization:
+   when downloading and decrypting parts of the hidden service descriptor and
+   at Bob&#39;s Tor client before contacting the rendezvous point. A service
+   provider can restrict access to his service at these two points to
+   authorized clients only.
+
+   There are currently two authorization protocols specified that are
+   described in more detail below:
+
+    1. The first protocol allows a service provider to restrict access
+       to clients with a previously received secret key only, but does not
+       attempt to hide service activity from others.
+
+    2. The second protocol, albeit being feasible for a limited set of about
+       16 clients, performs client authorization and hides service activity
+       from everyone but the authorized clients.
+
+2.1. Service with large-scale client authorization
+
+   The first client authorization protocol aims at performing access control
+   while consuming as few additional resources as possible. This is the &quot;basic&quot;
+   authorization protocol. A service provider should be able to permit access
+   to a large number of clients while denying access for everyone else.
+   However, the price for scalability is that the service won&#39;t be able to hide
+   its activity from unauthorized or formerly authorized clients.
+
+   The main idea of this protocol is to encrypt the introduction-point part
+   in hidden service descriptors to authorized clients using symmetric keys.
+   This ensures that nobody else but authorized clients can learn which
+   introduction points a service currently uses, nor can someone send a
+   valid INTRODUCE1 message without knowing the introduction key. Therefore,
+   a subsequent authorization at the introduction point is not required.
+
+   A service provider generates symmetric &quot;descriptor cookies&quot; for his
+   clients and distributes them outside of Tor. The suggested key size is
+   128 bits, so that descriptor cookies can be encoded in 22 base64 chars
+   (which can hold up to 22 * 6 = 132 bits, leaving 4 bits to encode the
+   authorization type (here: &quot;0&quot;) and allow a client to distinguish this
+   authorization protocol from others like the one proposed below).
+   Typically, the contact information for a hidden service using this
+   authorization protocol looks like this:
+
+     v2cbb2l4lsnpio4q.onion Ll3X7Xgz9eHGKCCnlFH0uz
+
+   When generating a hidden service descriptor, the service encrypts the
+   introduction-point part with a single randomly generated symmetric
+   128-bit session key using AES-CTR as described for v2 hidden service
+   descriptors in rend-spec. Afterwards, the service encrypts the session
+   key to all descriptor cookies using AES. Authorized client should be able
+   to efficiently find the session key that is encrypted for him/her, so
+   that 4 octet long client ID are generated consisting of descriptor cookie
+   and initialization vector. Descriptors always contain a number of
+   encrypted session keys that is a multiple of 16 by adding fake entries.
+   Encrypted session keys are ordered by client IDs in order to conceal
+   addition or removal of authorized clients by the service provider.
+
+     ATYPE  Authorization type: set to 1.                      [1 octet]
+     ALEN   Number of clients := 1 + ((clients - 1) div 16)    [1 octet]
+   for each symmetric descriptor cookie:
+     ID     Client ID: H(descriptor cookie | IV)[:4]          [4 octets]
+     SKEY   Session key encrypted with descriptor cookie     [16 octets]
+   (end of client-specific part)
+     RND    Random data      [(15 - ((clients - 1) mod 16)) * 20 octets]
+     IV     AES initialization vector                        [16 octets]
+     IPOS   Intro points, encrypted with session key  [remaining octets]
+
+   An authorized client needs to configure Tor to use the descriptor cookie
+   when accessing the hidden service. Therefore, a user adds the contact
+   information that she received from the service provider to her torrc
+   file. Upon downloading a hidden service descriptor, Tor finds the
+   encrypted introduction-point part and attempts to decrypt it using the
+   configured descriptor cookie. (In the rare event of two or more client
+   IDs being equal a client tries to decrypt all of them.)
+
+   Upon sending the introduction, the client includes her descriptor cookie
+   as auth type &quot;1&quot; in the INTRODUCE2 cell that she sends to the service.
+   The hidden service checks whether the included descriptor cookie is
+   authorized to access the service and either responds to the introduction
+   request, or not.
+
+2.2. Authorization for limited number of clients
+
+   A second, more sophisticated client authorization protocol goes the extra
+   mile of hiding service activity from unauthorized clients. This is the
+   &quot;stealth&quot; authorization protocol. With all else being equal to the preceding
+   authorization protocol, the second protocol publishes hidden service
+   descriptors for each user separately and gets along with encrypting the
+   introduction-point part of descriptors to a single client. This allows the
+   service to stop publishing descriptors for removed clients. As long as a
+   removed client cannot link descriptors issued for other clients to the
+   service, it cannot derive service activity any more. The downside of this
+   approach is limited scalability. Even though the distributed storage of
+   descriptors (cf. proposal 114) tackles the problem of limited scalability to
+   a certain extent, this protocol should not be used for services with more
+   than 16 clients. (In fact, Tor should refuse to advertise services for more
+   than this number of clients.)
+
+   A hidden service generates an asymmetric &quot;client key&quot; and a symmetric
+   &quot;descriptor cookie&quot; for each client. The client key is used as
+   replacement for the service&#39;s permanent key, so that the service uses a
+   different identity for each of his clients. The descriptor cookie is used
+   to store descriptors at changing directory nodes that are unpredictable
+   for anyone but service and client, to encrypt the introduction-point
+   part, and to be included in INTRODUCE2 cells. Once the service has
+   created client key and descriptor cookie, he tells them to the client
+   outside of Tor. The contact information string looks similar to the one
+   used by the preceding authorization protocol (with the only difference
+   that it has &quot;1&quot; encoded as auth-type in the remaining 4 of 132 bits
+   instead of &quot;0&quot; as before).
+
+   When creating a hidden service descriptor for an authorized client, the
+   hidden service uses the client key and descriptor cookie to compute
+   secret ID part and descriptor ID:
+
+     secret-id-part = H(time-period | descriptor-cookie | replica)
+
+     descriptor-id = H(client-key[:10] | secret-id-part)
+
+   The hidden service also replaces permanent-key in the descriptor with
+   client-key and encrypts introduction-points with the descriptor cookie.
+
+     ATYPE  Authorization type: set to 2.                         [1 octet]
+     IV     AES initialization vector                           [16 octets]
+     IPOS   Intro points, encr. with descriptor cookie   [remaining octets]
+
+   When uploading descriptors, the hidden service needs to make sure that
+   descriptors for different clients are not uploaded at the same time (cf.
+   Section 1.1) which is also a limiting factor for the number of clients.
+
+   When a client is requested to establish a connection to a hidden service
+   it looks up whether it has any authorization data configured for that
+   service. If the user has configured authorization data for authorization
+   protocol &quot;2&quot;, the descriptor ID is determined as described in the last
+   paragraph. Upon receiving a descriptor, the client decrypts the
+   introduction-point part using its descriptor cookie. Further, the client
+   includes its descriptor cookie as auth-type &quot;2&quot; in INTRODUCE2 cells that
+   it sends to the service.
+
+2.3. Hidden service configuration
+
+   A hidden service that is meant to perform client authorization adds a
+   new option HiddenServiceAuthorizeClient to its hidden service
+   configuration. This option contains the authorization type which is
+   either &quot;basic&quot; for the protocol described in 2.1 or &quot;stealth&quot; for the
+   protocol in 2.2 and a comma-separated list of human-readable client
+   names, so that Tor can create authorization data for these clients:
+
+     HiddenServiceAuthorizeClient auth-type client-name,client-name,...
+
+   If this option is configured, HiddenServiceVersion is automatically
+   reconfigured to contain only version numbers of 2 or higher. There is
+   a maximum of 512 client names for basic auth and a maximum of 16 for
+   stealth auth.
+
+   Tor stores all generated authorization data for the authorization
+   protocols described in Sections 2.1 and 2.2 in a new file using the
+   following file format:
+
+     &quot;client-name&quot; human-readable client identifier NL
+     &quot;descriptor-cookie&quot; 128-bit key ^= 22 base64 chars NL
+
+   If the authorization protocol of Section 2.2 is used, Tor also generates
+   and stores the following data:
+
+     &quot;client-key&quot; NL a public key in PEM format
+     [No extra arguments]
+
+2.4. Client configuration
+
+   To specify the cookie to use to access a given hidden service,
+   clients use the following syntax:
+
+    HidServAuth onion-address auth-cookie [service-name]:
+
+     Valid onion addresses contain 16 characters in a-z2-7 plus
+     &quot;.onion&quot;, and valid auth cookies contain 22 characters in
+     A-Za-z0-9+/. The service name is only used for internal purposes,
+     e.g., for Tor controllers; nothing in Tor itself requires or uses
+     it.
+
+
+3. Hidden service directory operation
+
+   This section has been introduced with the v2 hidden service descriptor
+   format. It describes all operations of the v2 hidden service descriptor
+   fetching and propagation mechanism that are required for the protocol
+   described in section 1 to succeed with v2 hidden service descriptors.
+
+3.1. Configuring as hidden service directory
+
+   Every onion router that has its directory port open can decide whether it
+   wants to store and serve hidden service descriptors. An onion router which
+   is configured as such includes the &quot;hidden-service-dir&quot; flag in its router
+   descriptors that it sends to directory authorities.
+
+   The directory authorities include a new flag &quot;HSDir&quot; for routers that
+   decided to provide storage for hidden service descriptors and that
+   have been running for at least 96 hours.
+
+3.2. Accepting publish requests
+
+   Hidden service directory nodes accept publish requests for v2 hidden service
+   descriptors and store them to their local memory. (It is not necessary to
+   make descriptors persistent, because after restarting, the onion router
+   would not be accepted as a storing node anyway, because it has not been
+   running for at least 24 hours.) All requests and replies are formatted as
+   HTTP messages. Requests are initiated via BEGIN_DIR cells directed to
+   the router&#39;s directory port, and formatted as HTTP POST requests to the URL
+   &quot;/tor/rendezvous2/publish&quot; relative to the hidden service directory&#39;s root,
+   containing as its body a v2 service descriptor.
+
+   A hidden service directory node parses every received descriptor and only
+   stores it when it thinks that it is responsible for storing that descriptor
+   based on its own routing table. See section 1.4 for more information on how
+   to determine responsibility for a certain descriptor ID.
+
+3.3. Processing fetch requests
+
+   Hidden service directory nodes process fetch requests for hidden service
+   descriptors by looking them up in their local memory. (They do not need to
+   determine if they are responsible for the passed ID, because it does no harm
+   if they deliver a descriptor for which they are not (any more) responsible.)
+   All requests and replies are formatted as HTTP messages. Requests are
+   initiated via BEGIN_DIR cells directed to the router&#39;s directory port,
+   and formatted as HTTP GET requests for the document &quot;/tor/rendezvous2/&lt;z&gt;&quot;,
+   where z is replaced with the encoding of the descriptor ID.
+</pre></div>
+</code></pre></td></tr></table>
+</div> <!-- class=content -->
+<div class='footer'>generated  by cgit v0.10.2 at 2016-05-20 13:17:46 (GMT)</div>
+</div> <!-- id=cgit -->
+</body>
+</html>

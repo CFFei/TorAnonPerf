@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en' lang='en'>
+<head>
+<title>torspec - Tor's protocol specifications</title>
+<meta name='generator' content='cgit v0.10.2'/>
+<meta name='robots' content='index, nofollow'/>
+<link rel='stylesheet' type='text/css' href='/cgit-css/cgit.css'/>
+<link rel='shortcut icon' href='/favicon.ico'/>
+<link rel='alternate' title='Atom feed' href='https://gitweb.torproject.org/torspec.git/atom/version-spec.txt?h=master' type='application/atom+xml'/>
+</head>
+<body>
+<div id='cgit'><table id='header'>
+<tr>
+<td class='logo' rowspan='2'><a href='/'><img src='/static/logo.jpg' alt='cgit logo'/></a></td>
+<td class='main'><a href='/'>index</a> : <a title='torspec' href='/torspec.git/'>torspec</a></td><td class='form'><form method='get' action=''>
+<select name='h' onchange='this.form.submit();'>
+<option value='master' selected='selected'>master</option>
+</select> <input type='submit' name='' value='switch'/></form></td></tr>
+<tr><td class='sub'>Tor's protocol specifications</td><td class='sub right'>The Tor Project</td></tr></table>
+<table class='tabs'><tr><td>
+<a href='/torspec.git/'>summary</a><a href='/torspec.git/refs/'>refs</a><a href='/torspec.git/log/version-spec.txt'>log</a><a class='active' href='/torspec.git/tree/version-spec.txt'>tree</a><a href='/torspec.git/commit/version-spec.txt'>commit</a><a href='/torspec.git/diff/version-spec.txt'>diff</a></td><td class='form'><form class='right' method='get' action='/torspec.git/log/version-spec.txt'>
+<select name='qt'>
+<option value='grep'>log msg</option>
+<option value='author'>author</option>
+<option value='committer'>committer</option>
+<option value='range'>range</option>
+</select>
+<input class='txt' type='text' size='10' name='q' value=''/>
+<input type='submit' value='search'/>
+</form>
+</td></tr></table>
+<div class='path'>path: <a href='/torspec.git/tree/'>root</a>/<a href='/torspec.git/tree/version-spec.txt'>version-spec.txt</a></div><div class='content'>blob: 4a3dccfc6db9297996e7fd760e3c18d8e9052364 (<a href='/torspec.git/plain/version-spec.txt'>plain</a>)
+<table summary='blob content' class='blob'>
+<tr><td class='linenumbers'><pre><a id='n1' href='#n1'>1</a>
+<a id='n2' href='#n2'>2</a>
+<a id='n3' href='#n3'>3</a>
+<a id='n4' href='#n4'>4</a>
+<a id='n5' href='#n5'>5</a>
+<a id='n6' href='#n6'>6</a>
+<a id='n7' href='#n7'>7</a>
+<a id='n8' href='#n8'>8</a>
+<a id='n9' href='#n9'>9</a>
+<a id='n10' href='#n10'>10</a>
+<a id='n11' href='#n11'>11</a>
+<a id='n12' href='#n12'>12</a>
+<a id='n13' href='#n13'>13</a>
+<a id='n14' href='#n14'>14</a>
+<a id='n15' href='#n15'>15</a>
+<a id='n16' href='#n16'>16</a>
+<a id='n17' href='#n17'>17</a>
+<a id='n18' href='#n18'>18</a>
+<a id='n19' href='#n19'>19</a>
+<a id='n20' href='#n20'>20</a>
+<a id='n21' href='#n21'>21</a>
+<a id='n22' href='#n22'>22</a>
+<a id='n23' href='#n23'>23</a>
+<a id='n24' href='#n24'>24</a>
+<a id='n25' href='#n25'>25</a>
+<a id='n26' href='#n26'>26</a>
+<a id='n27' href='#n27'>27</a>
+<a id='n28' href='#n28'>28</a>
+<a id='n29' href='#n29'>29</a>
+<a id='n30' href='#n30'>30</a>
+<a id='n31' href='#n31'>31</a>
+<a id='n32' href='#n32'>32</a>
+<a id='n33' href='#n33'>33</a>
+<a id='n34' href='#n34'>34</a>
+<a id='n35' href='#n35'>35</a>
+<a id='n36' href='#n36'>36</a>
+<a id='n37' href='#n37'>37</a>
+<a id='n38' href='#n38'>38</a>
+<a id='n39' href='#n39'>39</a>
+<a id='n40' href='#n40'>40</a>
+<a id='n41' href='#n41'>41</a>
+<a id='n42' href='#n42'>42</a>
+<a id='n43' href='#n43'>43</a>
+<a id='n44' href='#n44'>44</a>
+<a id='n45' href='#n45'>45</a>
+<a id='n46' href='#n46'>46</a>
+<a id='n47' href='#n47'>47</a>
+<a id='n48' href='#n48'>48</a>
+<a id='n49' href='#n49'>49</a>
+<a id='n50' href='#n50'>50</a>
+<a id='n51' href='#n51'>51</a>
+</pre></td>
+<td class='lines'><pre><code><style>.highlight .hll { background-color: #ffffcc }
+.highlight  { background: #ffffff; }
+.highlight .c { color: #888888 } /* Comment */
+.highlight .err { color: #a61717; background-color: #e3d2d2 } /* Error */
+.highlight .k { color: #008800; font-weight: bold } /* Keyword */
+.highlight .cm { color: #888888 } /* Comment.Multiline */
+.highlight .cp { color: #cc0000; font-weight: bold } /* Comment.Preproc */
+.highlight .c1 { color: #888888 } /* Comment.Single */
+.highlight .cs { color: #cc0000; font-weight: bold; background-color: #fff0f0 } /* Comment.Special */
+.highlight .gd { color: #000000; background-color: #ffdddd } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .gr { color: #aa0000 } /* Generic.Error */
+.highlight .gh { color: #333333 } /* Generic.Heading */
+.highlight .gi { color: #000000; background-color: #ddffdd } /* Generic.Inserted */
+.highlight .go { color: #888888 } /* Generic.Output */
+.highlight .gp { color: #555555 } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #666666 } /* Generic.Subheading */
+.highlight .gt { color: #aa0000 } /* Generic.Traceback */
+.highlight .kc { color: #008800; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008800; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008800; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008800 } /* Keyword.Pseudo */
+.highlight .kr { color: #008800; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #888888; font-weight: bold } /* Keyword.Type */
+.highlight .m { color: #0000DD; font-weight: bold } /* Literal.Number */
+.highlight .s { color: #dd2200; background-color: #fff0f0 } /* Literal.String */
+.highlight .na { color: #336699 } /* Name.Attribute */
+.highlight .nb { color: #003388 } /* Name.Builtin */
+.highlight .nc { color: #bb0066; font-weight: bold } /* Name.Class */
+.highlight .no { color: #003366; font-weight: bold } /* Name.Constant */
+.highlight .nd { color: #555555 } /* Name.Decorator */
+.highlight .ne { color: #bb0066; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0066bb; font-weight: bold } /* Name.Function */
+.highlight .nl { color: #336699; font-style: italic } /* Name.Label */
+.highlight .nn { color: #bb0066; font-weight: bold } /* Name.Namespace */
+.highlight .py { color: #336699; font-weight: bold } /* Name.Property */
+.highlight .nt { color: #bb0066; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #336699 } /* Name.Variable */
+.highlight .ow { color: #008800 } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #0000DD; font-weight: bold } /* Literal.Number.Bin */
+.highlight .mf { color: #0000DD; font-weight: bold } /* Literal.Number.Float */
+.highlight .mh { color: #0000DD; font-weight: bold } /* Literal.Number.Hex */
+.highlight .mi { color: #0000DD; font-weight: bold } /* Literal.Number.Integer */
+.highlight .mo { color: #0000DD; font-weight: bold } /* Literal.Number.Oct */
+.highlight .sb { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Backtick */
+.highlight .sc { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Char */
+.highlight .sd { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Doc */
+.highlight .s2 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Double */
+.highlight .se { color: #0044dd; background-color: #fff0f0 } /* Literal.String.Escape */
+.highlight .sh { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Heredoc */
+.highlight .si { color: #3333bb; background-color: #fff0f0 } /* Literal.String.Interpol */
+.highlight .sx { color: #22bb22; background-color: #f0fff0 } /* Literal.String.Other */
+.highlight .sr { color: #008800; background-color: #fff0ff } /* Literal.String.Regex */
+.highlight .s1 { color: #dd2200; background-color: #fff0f0 } /* Literal.String.Single */
+.highlight .ss { color: #aa6600; background-color: #fff0f0 } /* Literal.String.Symbol */
+.highlight .bp { color: #003388 } /* Name.Builtin.Pseudo */
+.highlight .vc { color: #336699 } /* Name.Variable.Class */
+.highlight .vg { color: #dd7700 } /* Name.Variable.Global */
+.highlight .vi { color: #3333bb } /* Name.Variable.Instance */
+.highlight .il { color: #0000DD; font-weight: bold } /* Literal.Number.Integer.Long */</style><div class="highlight"><pre>                        HOW TOR VERSION NUMBERS WORK
+
+1. The Old Way
+
+ Before 0.1.0, versions were of the format:
+     MAJOR.MINOR.MICRO(status(PATCHLEVEL))?(-cvs)?
+ where MAJOR, MINOR, MICRO, and PATCHLEVEL are numbers, status is one
+ of &quot;pre&quot; (for an alpha release), &quot;rc&quot; (for a release candidate), or
+ &quot;.&quot; for a release.  As a special case, &quot;a.b.c&quot; was equivalent to
+ &quot;a.b.c.0&quot;.  We compare the elements in order (major, minor, micro,
+ status, patchlevel, cvs), with &quot;cvs&quot; preceding non-cvs.
+
+ We would start each development branch with a final version in mind:
+ say, &quot;0.0.8&quot;.  Our first pre-release would be &quot;0.0.8pre1&quot;, followed by
+ (for example) &quot;0.0.8pre2-cvs&quot;, &quot;0.0.8pre2&quot;, &quot;0.0.8pre3-cvs&quot;,
+ &quot;0.0.8rc1&quot;, &quot;0.0.8rc2-cvs&quot;, and &quot;0.0.8rc2&quot;.  Finally, we&#39;d release
+ 0.0.8.  The stable CVS branch would then be versioned &quot;0.0.8.1-cvs&quot;,
+ and any eventual bugfix release would be &quot;0.0.8.1&quot;.
+
+2. The New Way
+
+ After 0.1.0, versions are of the format:
+    MAJOR.MINOR.MICRO[.PATCHLEVEL][-STATUS_TAG][ (EXTRA_INFO)]
+ The stuff in parentheses is optional.  As before, MAJOR, MINOR, MICRO,
+ and PATCHLEVEL are numbers, with an absent number equivalent to 0.
+ All versions should be distinguishable purely by those four
+ numbers.
+
+ The STATUS_TAG is purely informational, and lets you know how
+ stable we think the release is: &quot;alpha&quot; is pretty unstable; &quot;rc&quot; is a
+ release candidate; and no tag at all means that we have a final
+ release. If the tag ends with &quot;-cvs&quot; or &quot;-dev&quot;, you&#39;re looking at a
+ development snapshot that came after a given release.  If we *do*
+ encounter two versions that differ only by status tag, we compare them
+ lexically. The STATUS_TAG can&#39;t contain whitespace.
+
+ The EXTRA_INFO is also purely informational, often containing information
+ about the SCM commit this version came from. It is surrounded by parentheses
+ and can&#39;t contain whitespace. Unlike the STATUS_TAG this never impacts the way
+ that versions should be compared.
+
+ Now, we start each development branch with (say) 0.1.1.1-alpha.  The
+ patchlevel increments consistently as the status tag changes, for
+ example, as in: 0.1.1.2-alpha, 0.1.1.3-alpha, 0.1.1.4-rc, 0.1.1.5-rc.
+ Eventually, we release 0.1.1.6.  The next patch release is 0.1.1.7.
+
+ Between these releases, CVS is versioned with a -cvs tag: after
+ 0.1.1.1-alpha comes 0.1.1.1-alpha-cvs, and so on. But starting with
+ 0.1.2.1-alpha-dev, we switched to SVN and started using the &quot;-dev&quot;
+ suffix instead of the &quot;-cvs&quot; suffix.
+</pre></div>
+</code></pre></td></tr></table>
+</div> <!-- class=content -->
+<div class='footer'>generated  by cgit v0.10.2 at 2016-05-20 13:17:57 (GMT)</div>
+</div> <!-- id=cgit -->
+</body>
+</html>
